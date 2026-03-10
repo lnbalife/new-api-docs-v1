@@ -198,25 +198,25 @@ async function generate() {
   const locales = ['zh', 'en', 'ja'];
   await Promise.all(
     locales.flatMap((locale) => [
-      rm(`./content/docs/${locale}/api/ai-model`, {
+      rm(`./content/docs/${locale}/ai-model`, {
         recursive: true,
         force: true,
       }),
-      rm(`./content/docs/${locale}/api/management`, {
+      rm(`./content/docs/${locale}/management`, {
         recursive: true,
         force: true,
       }),
     ])
   );
 
-  // Ensure /zh/docs/api root can be fully restored even if deleted
-  await mkdir('./content/docs/zh/api', { recursive: true });
+  // Ensure /zh/docs root can be fully restored even if deleted
+  await mkdir('./content/docs/zh', { recursive: true });
   await ensureFileFromTemplate(
-    './content/docs/zh/api/meta.json',
+    './content/docs/zh/meta.json',
     './scripts/templates/zh-api-meta.json'
   );
   await ensureFileFromTemplate(
-    './content/docs/zh/api/index.mdx',
+    './content/docs/zh/index.mdx',
     './scripts/templates/zh-api-index.mdx'
   );
 
@@ -224,7 +224,7 @@ async function generate() {
   const aiModelMeta = new Map<string, string>(); // dir -> title
   await generateFiles({
     input: createOpenAPI({ input: await getSchemaInputs('aiModel') }),
-    output: './content/docs/zh/api/ai-model',
+    output: './content/docs/zh/ai-model',
     per: 'custom',
     includeDescription: true,
     addGeneratedComment: true,
@@ -266,18 +266,18 @@ async function generate() {
   console.log('✅ AI Model API docs generated!');
 
   // Root folder display name (sidebar) - keep consistent with Apifox docs wording
-  await writeMetaJson('./content/docs/zh/api/ai-model', {
+  await writeMetaJson('./content/docs/zh/ai-model', {
     title: 'AI 模型接口',
   });
   for (const [dir, title] of aiModelMeta.entries()) {
-    await writeMetaJson(`./content/docs/zh/api/ai-model/${dir}`, { title });
+    await writeMetaJson(`./content/docs/zh/ai-model/${dir}`, { title });
   }
 
   // Generate Management API docs with custom path control
   const managementMeta = new Map<string, string>(); // dir -> title
   await generateFiles({
     input: createOpenAPI({ input: await getSchemaInputs('management') }),
-    output: './content/docs/zh/api/management',
+    output: './content/docs/zh/management',
     per: 'custom',
     includeDescription: true,
     addGeneratedComment: true,
@@ -320,16 +320,16 @@ async function generate() {
   });
   console.log('✅ Management API docs generated!');
 
-  await writeMetaJson('./content/docs/zh/api/management', {
+  await writeMetaJson('./content/docs/zh/management', {
     title: '管理接口',
   });
   for (const [dir, title] of managementMeta.entries()) {
-    await writeMetaJson(`./content/docs/zh/api/management/${dir}`, { title });
+    await writeMetaJson(`./content/docs/zh/management/${dir}`, { title });
   }
 
   // Add management auth guide page (Apifox has a dedicated doc page in backend management)
   await ensureFileFromTemplate(
-    './content/docs/zh/api/management/auth.mdx',
+    './content/docs/zh/management/auth.mdx',
     './scripts/templates/zh-management-auth.mdx'
   );
 }

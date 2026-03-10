@@ -1,4 +1,6 @@
 {
-  "title": "ドキュメント",
-  "pages": ["guide", "installation", "api", "apps", "support", "business"]
+  "title": "API リファレンス",
+  "icon": "Code",
+  "root": true,
+  "pages": ["index", "ai-model"]
 }

@@ -1,9 +1,8 @@
 import type { Viewport, Metadata } from 'next';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import './global.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.newapi.ai'),
+  metadataBase: new URL('https://nodekey.biandianyun.com'),
   other: {
     charset: 'utf-8',
   },
@@ -30,9 +29,6 @@ export default function RootLayout({
       </head>
       <body>
         {children}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-        )}
       </body>
     </html>
   );

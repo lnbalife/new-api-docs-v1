@@ -9,7 +9,7 @@ const config = {
   experimental: {
     serverActions: {
       allowedOrigins: [
-        'localhost:3000',
+        'localhost:3200',
         // newapi.pro domains
         'docs.newapi.pro',
         'newapi.pro',

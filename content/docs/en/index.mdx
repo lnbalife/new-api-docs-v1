@@ -1,89 +1,100 @@
 ---
-title: Quick Start
-description: Choose the deployment method that best suits your needs
+title: API Reference
+description: New API Complete API Documentation
 ---
 
+import { Card, Cards } from 'fumadocs-ui/components/card';
 import {
-  Server,
-  Network,
-  Code2,
+  List,
+  MessageSquare,
+  FileText,
+  Database,
+  Search,
+  ShieldCheck,
   Headphones,
-  Bot,
-  Handshake,
-  Container,
-  Boxes,
+  Radio,
+  Image,
+  Video,
+  FileQuestion,
 } from 'lucide-react';
 
-## Deployment Method Selection
+## Overview
 
-Choose the appropriate deployment method based on your environment and technical requirements.
+New API provides a complete set of RESTful AI Model APIs. These interfaces allow you to invoke various AI capabilities, compatible with the OpenAI API format.
 
-<Cards>
-  <Card
-    icon={<Boxes />}
-    title="Docker Compose Deployment"
-    description="Orchestrate multiple services with Docker Compose, suitable for production environments or scenarios requiring dependencies like MySQL and Redis."
-    href="/en/docs/installation/deployment-methods/docker-compose-installation"
-  />
-  <Card
-    icon={<Container />}
-    title="Docker Single Container Deployment"
-    description="Quickly deploy New API using a Docker image, suitable for personal use or small-scale applications."
-    href="/en/docs/installation/deployment-methods/docker-installation"
-  />
-  <Card
-    icon={<Server />}
-    title="1Panel Deployment"
-    description="Rapid deployment via the 1Panel graphical interface, suitable for users unfamiliar with the command line."
-    href="/en/docs/installation/deployment-methods/1panel-installation"
-  />
-  <Card
-    icon={<Server />}
-    title="Baota Panel Deployment"
-    description="Rapid deployment via the Baota Panel graphical interface, suitable for users unfamiliar with the command line."
-    href="/en/docs/installation/deployment-methods/bt-docker-installation"
-  />
-  <Card
-    icon={<Network />}
-    title="Cluster Deployment Mode"
-    description="Multi-node distributed deployment for high availability, load balancing, and horizontal scalability, suitable for large-scale applications and enterprise-level scenarios."
-    href="/en/docs/installation/deployment-methods/cluster-deployment"
-  />
-  <Card
-    icon={<Code2 />}
-    title="Local Development Deployment"
-    description="Suitable for developers contributing code and custom development, providing a complete guide to local development environment setup."
-    href="/en/docs/installation/deployment-methods/local-development"
-  />
-</Cards>
+<Callout title="Online Debugging">
+  You can visit [Apifox Playground](https://apifox.newapi.ai/) to test and debug API interfaces online, or browse the API documentation below.
+</Callout>
 
-## Browse Our Documentation
+## AI Model APIs
 
-Explore comprehensive guides and resources to fully leverage the powerful features of New API.
+AI Model APIs provide calls for various AI capabilities, compatible with the OpenAI API format.
 
 <Cards>
   <Card
-    icon={<Code2 />}
-    title="API Documentation"
-    description="Comprehensive API interface descriptions and call examples."
-    href="/en/docs/api"
+    icon={<List />}
+    title="Model List"
+    description="Get a list of available models."
+    href="/en/docs/ai-model/models/list/listmodels"
   />
   <Card
-    icon={<Bot />}
-    title="AI Applications"
-    description="Explore various AI application examples developed based on New API."
-    href="/en/docs/apps"
+    icon={<MessageSquare />}
+    title="Chat"
+    description="Conversation completion API."
+    href="/en/docs/ai-model/chat/openai/createchatcompletion"
+  />
+  <Card
+    icon={<FileText />}
+    title="Completions"
+    description="Traditional text completion API."
+    href="/en/docs/ai-model/completions/createcompletion"
+  />
+  <Card
+    icon={<Database />}
+    title="Embeddings"
+    description="Text embedding vector generation API."
+    href="/en/docs/ai-model/embeddings/createembedding"
+  />
+  <Card
+    icon={<Search />}
+    title="Rerank"
+    description="Document reranking API."
+    href="/en/docs/ai-model/rerank/creatererank"
+  />
+  <Card
+    icon={<ShieldCheck />}
+    title="Moderations"
+    description="Content safety moderation API."
+    href="/en/docs/ai-model/moderations/createmoderation"
   />
   <Card
     icon={<Headphones />}
-    title="Help & Support"
-    description="Frequently asked questions and community communication."
-    href="/en/docs/support"
+    title="Audio"
+    description="Speech recognition and speech synthesis API."
+    href="/en/docs/ai-model/audio/openai/createspeech"
   />
   <Card
-    icon={<Handshake />}
-    title="Business Cooperation"
-    description="Partner with us to jointly explore the AI ecosystem and business opportunities."
-    href="/en/docs/business"
+    icon={<Radio />}
+    title="Real-time Audio"
+    description="Real-time audio streaming API."
+    href="/en/docs/ai-model/realtime/createrealtimesession"
+  />
+  <Card
+    icon={<Image />}
+    title="Images"
+    description="AI image generation API."
+    href="/en/docs/ai-model/images/openai/post-v1-images-generations"
+  />
+  <Card
+    icon={<Video />}
+    title="Videos"
+    description="AI video generation API."
+    href="/en/docs/ai-model/videos/sora/createvideo"
+  />
+  <Card
+    icon={<FileQuestion />}
+    title="Unimplemented"
+    description="Placeholder API, not yet implemented."
+    href="/en/docs/ai-model/unimplemented/files/listfiles"
   />
 </Cards>

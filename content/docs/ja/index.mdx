@@ -1,89 +1,100 @@
 ---
-title: クイックスタート
-description: お客様のニーズに最適なデプロイ方法を選択してください
+title: APIリファレンス
+description: New API の完全なインターフェースドキュメント
 ---
 
+import { Card, Cards } from 'fumadocs-ui/components/card';
 import {
-  Server,
-  Network,
-  Code2,
+  List,
+  MessageSquare,
+  FileText,
+  Database,
+  Search,
+  ShieldCheck,
   Headphones,
-  Bot,
-  Handshake,
-  Container,
-  Boxes,
+  Radio,
+  Image,
+  Video,
+  FileQuestion,
 } from 'lucide-react';
 
-## デプロイ方法の選択
+## 概要
 
-お客様の環境と技術要件に基づいて、適切なデプロイ方法を選択してください。
+New API は完全な RESTful AI モデル API を提供します。これらのインターフェースを通じて、OpenAI API 形式と互換性のある様々な AI 機能を呼び出すことができます。
 
-<Cards>
-  <Card
-    icon={<Boxes />}
-    title="Docker Compose デプロイ"
-    description="Docker Compose を使用して複数のサービスをオーケストレーションします。本番環境や MySQL、Redis などの依存関係が必要なシナリオに適しています。"
-    href="/ja/docs/installation/deployment-methods/docker-compose-installation"
-  />
-  <Card
-    icon={<Container />}
-    title="Docker 単一コンテナデプロイ"
-    description="Docker イメージを使用して New API を迅速にデプロイします。個人利用や小規模なアプリケーションシナリオに適しています。"
-    href="/ja/docs/installation/deployment-methods/docker-installation"
-  />
-  <Card
-    icon={<Server />}
-    title="1Panel パネルデプロイ"
-    description="1Panel パネルのグラフィカルインターフェースを通じて迅速にデプロイします。コマンドラインに不慣れなユーザーに適しています。"
-    href="/ja/docs/installation/deployment-methods/1panel-installation"
-  />
-  <Card
-    icon={<Server />}
-    title="宝塔パネルデプロイ"
-    description="宝塔パネルのグラフィカルインターフェースを通じて迅速にデプロイします。コマンドラインに不慣れなユーザーに適しています。"
-    href="/ja/docs/installation/deployment-methods/bt-docker-installation"
-  />
-  <Card
-    icon={<Network />}
-    title="クラスターデプロイモード"
-    description="マルチノード分散デプロイにより、高可用性、ロードバランシング、水平スケーリングを実現します。大規模なアプリケーションやエンタープライズシナリオに適しています。"
-    href="/ja/docs/installation/deployment-methods/cluster-deployment"
-  />
-  <Card
-    icon={<Code2 />}
-    title="ローカル開発デプロイ"
-    description="開発者によるコード貢献やカスタム開発に適しており、完全なローカル開発環境設定ガイドを提供します。"
-    href="/ja/docs/installation/deployment-methods/local-development"
-  />
-</Cards>
+<Callout title="オンラインデバッグ">
+  [Apifox 操練場](https://apifox.newapi.ai/) にアクセスしてAPIインターフェースをオンラインでテストおよびデバッグするか、以下のAPIドキュメントを参照してください。
+</Callout>
 
-## ドキュメントを閲覧する
+## AIモデルインターフェース
 
-New API の強力な機能を最大限に活用するための包括的なガイドとリソースを探ります。
+AIモデルインターフェースは、OpenAI API形式と互換性のある様々なAI機能の呼び出しを提供します。
 
 <Cards>
   <Card
-    icon={<Code2 />}
-    title="APIドキュメント"
-    description="包括的なAPIインターフェースの説明と呼び出し例。"
-    href="/ja/docs/api"
+    icon={<List />}
+    title="モデルリスト"
+    description="利用可能なモデルのリストを取得します。"
+    href="/ja/docs/ai-model/models/list/listmodels"
   />
   <Card
-    icon={<Bot />}
-    title="AIアプリケーション"
-    description="New API をベースに開発された様々なAIアプリケーションの例を探ります。"
-    href="/ja/docs/apps"
+    icon={<MessageSquare />}
+    title="チャット"
+    description="会話補完インターフェース。"
+    href="/ja/docs/ai-model/chat/openai/createchatcompletion"
+  />
+  <Card
+    icon={<FileText />}
+    title="補完"
+    description="従来のテキスト補完インターフェース。"
+    href="/ja/docs/ai-model/completions/createcompletion"
+  />
+  <Card
+    icon={<Database />}
+    title="埋め込み"
+    description="テキスト埋め込みベクトル生成インターフェース。"
+    href="/ja/docs/ai-model/embeddings/createembedding"
+  />
+  <Card
+    icon={<Search />}
+    title="再ランク付け"
+    description="ドキュメントの再ランク付けインターフェース。"
+    href="/ja/docs/ai-model/rerank/creatererank"
+  />
+  <Card
+    icon={<ShieldCheck />}
+    title="審査"
+    description="コンテンツ安全審査インターフェース。"
+    href="/ja/docs/ai-model/moderations/createmoderation"
   />
   <Card
     icon={<Headphones />}
-    title="ヘルプ＆サポート"
-    description="よくある質問とコミュニティ交流。"
-    href="/ja/docs/support"
+    title="オーディオ"
+    description="音声認識および音声合成インターフェース。"
+    href="/ja/docs/ai-model/audio/openai/createspeech"
   />
   <Card
-    icon={<Handshake />}
-    title="ビジネス提携"
-    description="私たちと提携し、AIエコシステムとビジネスチャンスを共に開拓しましょう。"
-    href="/ja/docs/business"
+    icon={<Radio />}
+    title="リアルタイム音声"
+    description="リアルタイムオーディオストリームインターフェース。"
+    href="/ja/docs/ai-model/realtime/createrealtimesession"
+  />
+  <Card
+    icon={<Image />}
+    title="画像"
+    description="AI画像生成インターフェース。"
+    href="/ja/docs/ai-model/images/openai/post-v1-images-generations"
+  />
+  <Card
+    icon={<Video />}
+    title="ビデオ"
+    description="AIビデオ生成インターフェース。"
+    href="/ja/docs/ai-model/videos/sora/createvideo"
+  />
+  <Card
+    icon={<FileQuestion />}
+    title="未実装"
+    description="プレースホルダーインターフェース、現在未実装です。"
+    href="/ja/docs/ai-model/unimplemented/files/listfiles"
   />
 </Cards>

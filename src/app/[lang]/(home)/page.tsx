@@ -73,48 +73,6 @@ export default async function Page({
   const { lang } = await params;
   const content = contentMap[lang] || contentMap.en;
 
-  const partners = [
-    {
-      name: 'Cherry Studio',
-      url: 'https://www.cherry-ai.com/',
-      logo: '/assets/partner/cherry-studio.png',
-    },
-    {
-      name: 'AionUi',
-      url: 'https://github.com/iOfficeAI/AionUi',
-      logo: '/assets/partner/aionui.png',
-    },
-    {
-      name: 'Peking University',
-      url: 'https://bda.pku.edu.cn/',
-      logo: '/assets/partner/pku.png',
-    },
-    {
-      name: 'UCloud',
-      url: 'https://www.compshare.cn/?ytag=GPU_yy_gh_newapi',
-      logo: '/assets/partner/ucloud.png',
-    },
-    {
-      name: 'Alibaba Cloud',
-      url: 'https://www.aliyun.com/',
-      logo: '/assets/partner/aliyun.png',
-    },
-    {
-      name: 'IO.NET',
-      url: 'https://io.net/',
-      logo: '/assets/partner/io-net.png',
-    },
-  ];
-
-  const sponsorPartners = [
-    {
-      name: 'RixAPI',
-      url: 'https://rixapi.com/',
-      lightLogo: '/assets/partner/rixapi-black.png',
-      darkLogo: '/assets/partner/rixapi-white.png',
-    },
-  ];
-
   return (
     <main className="text-landing-foreground dark:text-landing-foreground-dark pt-4 pb-6 md:pb-12">
       <div className="relative mx-auto flex h-[70vh] max-h-[900px] min-h-[600px] w-full max-w-[1400px] overflow-hidden rounded-2xl border bg-origin-border">
@@ -137,130 +95,14 @@ export default async function Page({
               <BookOpen className="size-4" />
               {content.getStarted}
             </Link>
-            <a
-              href="https://github.com/QuantumNous/new-api"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="bg-fd-secondary text-fd-secondary-foreground hover:bg-fd-accent inline-flex items-center justify-center gap-2 rounded-full border px-5 py-3 font-medium tracking-tight transition-colors max-sm:text-sm"
-            >
-              <Github className="size-4" />
-              {content.github}
-            </a>
+            
           </div>
         </div>
       </div>
 
-      {/* Partners Section */}
-      <section className="mx-auto mt-12 max-w-[1400px] px-4 text-center">
-        <h2 className="text-2xl font-semibold md:text-3xl">
-          {content.partnersTitle}
-        </h2>
-        <p className="text-muted-foreground mt-2 text-sm">
-          {content.partnersSubtitle}
-        </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 md:gap-10">
-          {partners.map((partner) => (
-            <a
-              key={partner.name}
-              href={partner.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-70 grayscale-[50%] transition-all duration-300 hover:opacity-100 hover:grayscale-0"
-            >
-              <Image
-                src={partner.logo}
-                alt={partner.name}
-                width={72}
-                height={60}
-                className="h-[50px] w-auto md:h-[60px]"
-                loading="lazy"
-                decoding="async"
-              />
-            </a>
-          ))}
-        </div>
-      </section>
 
-      {/* Sponsor Partners Section */}
-      <section className="mx-auto mt-16 max-w-[1400px] px-4 text-center">
-        <h2 className="text-2xl font-semibold md:text-3xl">
-          {content.sponsorPartnersTitle}
-        </h2>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 md:gap-10">
-          {sponsorPartners.map((partner) => (
-            <a
-              key={partner.name}
-              href={partner.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-70 grayscale-[50%] transition-all duration-300 hover:opacity-100 hover:grayscale-0"
-            >
-              <Image
-                src={partner.lightLogo}
-                alt={partner.name}
-                width={120}
-                height={60}
-                className="block h-[50px] w-auto dark:hidden md:h-[60px]"
-                loading="lazy"
-                decoding="async"
-              />
-              <Image
-                src={partner.darkLogo}
-                alt={partner.name}
-                width={120}
-                height={60}
-                className="hidden h-[50px] w-auto dark:block md:h-[60px]"
-                loading="lazy"
-                decoding="async"
-              />
-            </a>
-          ))}
-        </div>
-      </section>
 
-      {/* Development Contributors Section */}
-      <section className="mx-auto mt-16 max-w-[1400px] px-4 text-center">
-        <h2 className="text-2xl font-semibold md:text-3xl">
-          {content.devContributorsTitle}
-        </h2>
-        <div className="mt-8 flex justify-center">
-          <a
-            href="https://github.com/QuantumNous/new-api/graphs/contributors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="https://contrib.rocks/image?repo=QuantumNous/new-api"
-              alt="Development Contributors"
-              loading="lazy"
-              decoding="async"
-              className="max-w-full"
-            />
-          </a>
-        </div>
-      </section>
 
-      {/* Documentation Contributors Section */}
-      <section className="mx-auto mt-16 max-w-[1400px] px-4 text-center">
-        <h2 className="text-2xl font-semibold md:text-3xl">
-          {content.docsContributorsTitle}
-        </h2>
-        <div className="mt-8 flex justify-center">
-          <a
-            href="https://github.com/QuantumNous/new-api-docs-v1/graphs/contributors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="https://contrib.rocks/image?repo=QuantumNous/new-api-docs-v1"
-              alt="Documentation Contributors"
-              loading="lazy"
-              decoding="async"
-              className="max-w-full"
-            />
-          </a>
-        </div>
-      </section>
     </main>
   );
 }

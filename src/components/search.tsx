@@ -40,7 +40,7 @@ function Header() {
         <p className="text-fd-muted-foreground text-xs">
           Powered by{' '}
           <a
-            href="https://www.newapi.ai"
+            href="https://nodekey.biandianyun.com"
             target="_blank"
             rel="noreferrer noopener"
           >
@@ -247,7 +247,7 @@ function Input(props: ComponentProps<'textarea'>) {
 
 const roleName: Record<string, string> = {
   user: 'you',
-  assistant: 'New API Docs',
+  assistant: 'NodeKey Docs',
 };
 
 function Message({

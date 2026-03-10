@@ -30,23 +30,7 @@ export default async function Layout({
       tabMode="top"
       tree={source.pageTree[lang]}
       links={linkItems.filter((item) => item.type === 'icon')}
-      sidebar={{
-        defaultOpenLevel: 0,
-        tabs: {
-          transform(option, node) {
-            if (!node.icon) return option;
-
-            return {
-              ...option,
-              icon: (
-                <div className="max-md:bg-fd-primary/10 max-md:border-fd-primary/20 size-full rounded-lg max-md:border max-md:p-1.5 [&_svg]:size-full">
-                  {node.icon}
-                </div>
-              ),
-            };
-          },
-        },
-      }}
+      
     >
       {children}
       <Footer lang={lang} />
