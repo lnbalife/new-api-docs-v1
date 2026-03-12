@@ -24,7 +24,7 @@ export function generateLLMsText(
     .getPages(lang)
     .map((page) => {
       const slug = page.slugs.join('/');
-      const docsPath = slug ? `/${lang}/docs/${slug}` : `/${lang}/docs`;
+      const docsPath = slug ? `/${lang}/${slug}` : `/${lang}`;
       const markdownPath = slug
         ? `/${lang}/llms.mdx/${slug}`
         : `/${lang}/llms.mdx`;

@@ -26,8 +26,7 @@ bun run build
 
 | Path                      | Description                  |
 | ------------------------- | ---------------------------- |
-| `app/(home)`              | Landing page and home pages  |
-| `app/[lang]/docs`         | Documentation pages (i18n)   |
+| `app/[lang]/(docs)`       | Documentation pages (i18n)   |
 | `app/api/search/route.ts` | Search API endpoint          |
 | `content/docs/`           | Documentation content (MDX)  |
 | `lib/source.ts`           | Content source configuration |

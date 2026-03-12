@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   function docsPathForSlug(slugKey: string): string {
-    return slugKey ? `docs/${slugKey}` : 'docs';
+    return slugKey;
   }
 
   // Helper to generate hreflang alternates for a path, only for existing languages.
@@ -96,6 +96,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Add docs pages with proper alternates and lastModified
   for (const [slugKey, langPages] of pagesBySlug) {
+    if (!slugKey) continue;
+
     const availableLangs = langPages.map((p) => p.lang);
     const docsPath = docsPathForSlug(slugKey);
 
@@ -107,7 +109,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       const depth = page.slugs.length;
       let priority: number;
       if (depth === 1) {
-        priority = 0.9; // Top-level pages (e.g., /docs/guide)
+        priority = 0.9; // Top-level pages (e.g., /guide)
       } else if (depth === 2) {
         priority = 0.8; // Second-level pages
       } else {

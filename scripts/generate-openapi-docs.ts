@@ -209,7 +209,7 @@ async function generate() {
     ])
   );
 
-  // Ensure /zh/docs root can be fully restored even if deleted
+  // Ensure the localized docs root can be fully restored even if deleted
   await mkdir('./content/docs/zh', { recursive: true });
   await ensureFileFromTemplate(
     './content/docs/zh/meta.json',

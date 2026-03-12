@@ -30,7 +30,6 @@ export default async function Layout({
       tabMode="top"
       tree={source.pageTree[lang]}
       links={linkItems.filter((item) => item.type === 'icon')}
-      
     >
       {children}
       <Footer lang={lang} />

@@ -171,7 +171,7 @@ function getTranslationPrompt(
 
   return `你是一个专业的技术文档翻译专家。请将以下 Markdown 格式的技术文档从中文翻译为${nativeName}。
 ${BASE_TRANSLATION_RULES}
-9. 路径中的语言代码需要替换：将 /zh/ 替换为 /${dir}/（例如：href="/zh/docs/guide" → href="/${dir}/docs/guide"）
+9. 路径中的语言代码需要替换：将 /zh/ 替换为 /${dir}/（例如：href="/zh/guide" → href="/${dir}/guide"）
 
 术语表（不要放在翻译内容中）：
 ${GLOSSARY}

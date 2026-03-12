@@ -37,10 +37,24 @@ const config = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/:lang(en|zh|ja)/docs',
+        destination: '/:lang',
+        permanent: true,
+      },
+      {
+        source: '/:lang(en|zh|ja)/docs/:path*',
+        destination: '/:lang/:path*',
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
-        source: '/:lang/docs/:path*.mdx',
+        source: '/:lang(en|zh|ja)/:path*.mdx',
         destination: '/:lang/llms.mdx/:path*',
       },
     ];
