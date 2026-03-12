@@ -60,6 +60,20 @@ async function loadTagSlugOverrides(): Promise<TagSlugOverrides> {
   }
 }
 
+/** AI 模型接口中排除的栏目（不生成文档） */
+const EXCLUDED_AI_MODEL_TAGS = [
+  '补全（Completions）',
+  '模型（Models）',
+  '审查（Moderations）',
+  '重排序（Rerank）',
+  '未实现（Unimplemented）',
+];
+
+function isExcludedAiModelTag(tag: string): boolean {
+  const firstPart = tag.split('/')[0]?.trim() || '';
+  return EXCLUDED_AI_MODEL_TAGS.some((ex) => firstPart === ex);
+}
+
 function deriveSlugFromTagSegment(
   rawSegment: string,
   overrides: TagSlugOverrides
@@ -240,6 +254,7 @@ async function generate() {
         const { displayName } = extracted;
 
         const tag = operation.tags?.[0] || 'default';
+        if (isExcludedAiModelTag(tag)) continue;
         const { slugPath, metaByDir } = tagToSlugPath(tag, slugOverrides);
         for (const m of metaByDir) aiModelMeta.set(m.dir, m.title);
         const operationId =

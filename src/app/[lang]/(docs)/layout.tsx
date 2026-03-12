@@ -2,6 +2,7 @@ import { source } from '@/lib/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { baseOptions, linkItems } from '@/lib/layout.shared';
 import { Footer } from '@/components/footer';
+import { CustomSidebarFolder } from '@/components/sidebar-folder';
 // AI feature temporarily disabled
 // import { AISearchTrigger } from '@/components/search';
 import 'katex/dist/katex.min.css';
@@ -30,6 +31,11 @@ export default async function Layout({
       tabMode="top"
       tree={source.pageTree[lang]}
       links={linkItems.filter((item) => item.type === 'icon')}
+      sidebar={{
+        components: {
+          Folder: CustomSidebarFolder,
+        },
+      }}
     >
       {children}
       <Footer lang={lang} />

@@ -1,21 +1,16 @@
 ---
-title: API Reference
+title: 接口文档
 description: New API Complete API Documentation
 ---
 
 import { Card, Cards } from 'fumadocs-ui/components/card';
 import {
-  List,
   MessageSquare,
-  FileText,
   Database,
-  Search,
-  ShieldCheck,
   Headphones,
   Radio,
   Image,
   Video,
-  FileQuestion,
 } from 'lucide-react';
 
 ## Overview
@@ -32,40 +27,16 @@ AI Model APIs provide calls for various AI capabilities, compatible with the Ope
 
 <Cards>
   <Card
-    icon={<List />}
-    title="Model List"
-    description="Get a list of available models."
-    href="/en/ai-model/models/list/listmodels"
-  />
-  <Card
     icon={<MessageSquare />}
     title="Chat"
     description="Conversation completion API."
     href="/en/ai-model/chat/openai/createchatcompletion"
   />
   <Card
-    icon={<FileText />}
-    title="Completions"
-    description="Traditional text completion API."
-    href="/en/ai-model/completions/createcompletion"
-  />
-  <Card
     icon={<Database />}
     title="Embeddings"
     description="Text embedding vector generation API."
     href="/en/ai-model/embeddings/createembedding"
-  />
-  <Card
-    icon={<Search />}
-    title="Rerank"
-    description="Document reranking API."
-    href="/en/ai-model/rerank/creatererank"
-  />
-  <Card
-    icon={<ShieldCheck />}
-    title="Moderations"
-    description="Content safety moderation API."
-    href="/en/ai-model/moderations/createmoderation"
   />
   <Card
     icon={<Headphones />}
@@ -90,11 +61,5 @@ AI Model APIs provide calls for various AI capabilities, compatible with the Ope
     title="Videos"
     description="AI video generation API."
     href="/en/ai-model/videos/sora/createvideo"
-  />
-  <Card
-    icon={<FileQuestion />}
-    title="Unimplemented"
-    description="Placeholder API, not yet implemented."
-    href="/en/ai-model/unimplemented/files/listfiles"
   />
 </Cards>

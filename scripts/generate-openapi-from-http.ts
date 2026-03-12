@@ -358,6 +358,20 @@ function groupByModuleId(moduleId?: number) {
   return 'ai-model';
 }
 
+/** AI 模型接口中排除的栏目（不生成 OpenAPI 文档） */
+const EXCLUDED_AI_MODEL_TAGS = [
+  '补全（Completions）',
+  '模型（Models）',
+  '审查（Moderations）',
+  '重排序（Rerank）',
+  '未实现（Unimplemented）',
+];
+
+function isExcludedAiModelTag(tag: string): boolean {
+  const firstPart = tag.split('/')[0]?.trim() || '';
+  return EXCLUDED_AI_MODEL_TAGS.some((ex) => firstPart === ex);
+}
+
 async function readHttpSource(): Promise<HttpTxtRoot> {
   const DEFAULT_URL =
     'https://api.apifox.com/api/v1/projects/7484041/http-apis';
@@ -500,6 +514,7 @@ async function main() {
     const tags = (ep.tags && ep.tags.length > 0 ? ep.tags : ['default']).map(
       (t) => t || 'default'
     );
+    if (group === 'ai-model' && isExcludedAiModelTag(tags[0])) continue;
     const tagPathParts = tags[0].split('/').map(sanitizePathPart);
 
     const method = normalizeMethod(ep.method || 'get');

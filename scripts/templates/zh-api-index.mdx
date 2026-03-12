@@ -5,17 +5,12 @@ description: NodeKey 接口文档
 
 import { Card, Cards } from 'fumadocs-ui/components/card';
 import {
-  List,
   MessageSquare,
-  FileText,
   Database,
-  Search,
-  ShieldCheck,
   Headphones,
   Radio,
   Image,
   Video,
-  FileQuestion,
   Server,
   SlidersHorizontal,
   UserCheck,
@@ -45,40 +40,16 @@ AI 模型接口提供各种 AI 能力的调用，兼容 OpenAI API 格式。
 
 <Cards>
   <Card
-    icon={<List />}
-    title="模型列表"
-    description="获取可用的模型列表。"
-    href="/zh/ai-model/models/list/listmodels"
-  />
-  <Card
     icon={<MessageSquare />}
     title="聊天"
     description="对话补全接口。"
     href="/zh/ai-model/chat/openai/createchatcompletion"
   />
   <Card
-    icon={<FileText />}
-    title="补全"
-    description="传统文本补全接口。"
-    href="/zh/ai-model/completions/createcompletion"
-  />
-  <Card
     icon={<Database />}
     title="嵌入"
     description="文本嵌入向量生成接口。"
     href="/zh/ai-model/embeddings/createembedding"
-  />
-  <Card
-    icon={<Search />}
-    title="重排序"
-    description="文档重排序接口。"
-    href="/zh/ai-model/rerank/creatererank"
-  />
-  <Card
-    icon={<ShieldCheck />}
-    title="审查"
-    description="内容安全审核接口。"
-    href="/zh/ai-model/moderations/createmoderation"
   />
   <Card
     icon={<Headphones />}
@@ -103,11 +74,5 @@ AI 模型接口提供各种 AI 能力的调用，兼容 OpenAI API 格式。
     title="视频"
     description="AI视频生成接口。"
     href="/zh/ai-model/videos/sora/createvideo"
-  />
-  <Card
-    icon={<FileQuestion />}
-    title="未实现"
-    description="占位接口，暂未实现。"
-    href="/zh/ai-model/unimplemented/files/listfiles"
   />
 </Cards>
