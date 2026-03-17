@@ -40,7 +40,7 @@ function Header() {
         <p className="text-fd-muted-foreground text-xs">
           Powered by{' '}
           <a
-            href="https://nodekey.biandianyun.com"
+            href="https://nodekey.xinghanyun.cn"
             target="_blank"
             rel="noreferrer noopener"
           >

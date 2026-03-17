@@ -11,7 +11,7 @@ export function createMetadata(override: Metadata): Metadata {
     openGraph: {
       title: override.title ?? undefined,
       description: override.description ?? undefined,
-      url: 'https://nodekey.biandianyun.com',
+      url: 'https://nodekey.xinghanyun.cn',
       images: '/assets/logo.png',
       siteName: 'Nodekey',
       type: 'website',

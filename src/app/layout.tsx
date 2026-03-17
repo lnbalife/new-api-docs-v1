@@ -2,7 +2,7 @@ import type { Viewport, Metadata } from 'next';
 import './global.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://nodekey.biandianyun.com'),
+  metadataBase: new URL('https://nodekey.xinghanyun.cn'),
   other: {
     charset: 'utf-8',
   },

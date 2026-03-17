@@ -6,4 +6,4 @@ export const API_BASE_URL =
   process.env.API_BASE_URL ??
   (process.env.NODE_ENV === 'development'
     ? 'http://localhost:3300'
-    : 'https://nodekey.biandianyun.com');
+    : 'https://nodekey.xinghanyun.cn');
