@@ -37,7 +37,7 @@ export const CustomSidebarFolder: FC<{
       <div className="relative">
         <div
           className={cn(
-            'flex items-center gap-2 rounded-lg px-2 py-2 font-semibold text-fd-foreground',
+            'flex items-center gap-2 rounded-lg px-2 py-2 font-semibold text-fd-muted-foreground [&_svg]:size-4 [&_svg]:shrink-0',
             'ps-[var(--sidebar-item-offset)]'
           )}
         >

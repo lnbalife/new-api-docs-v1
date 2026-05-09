@@ -2,5 +2,5 @@
   "title": "接口文档",
   "icon": "Code",
   "root": true,
-  "pages": ["index", "ai-model"]
+  "pages": ["index", "auth", "quick", "question", "ai-model"]
 }

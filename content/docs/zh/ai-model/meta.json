@@ -1,5 +1,6 @@
 {
   "title": "AI 模型接口",
   "defaultOpen": true,
-  "collapsible": false
+  "collapsible": false,
+  "icon": "Cpu"
 }

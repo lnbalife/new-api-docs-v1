@@ -1,61 +1,37 @@
 ---
-title: 接口文档
-description: NodeKey 接口文档
+title: 概览
+description: NodeKey AI聚合平台基于行业标准构建的统一网关，允许开发者通过单一、优化的接口访问世界级的 AI 模型。百分百兼容 OpenAI API 规范。
+icon: Globe
 ---
 
 import { Card, Cards } from 'fumadocs-ui/components/card';
 import {
-  MessageSquare,
-  Database,
-  Headphones,
-  Radio,
-  Image,
-  Video,
+  PanelsTopLeft,
+  Zap,
+  Code,
+  ShieldCheck,
 } from 'lucide-react';
-
-## 概述
-
-NodeKey 提供完整的 RESTful AI 模型 API 接口。这些接口允许您调用各种 AI 能力，兼容 OpenAI API 格式。
-
-## AI 模型接口
-
-AI 模型接口提供各种 AI 能力的调用，兼容 OpenAI API 格式。
 
 <Cards>
   <Card
-    icon={<MessageSquare />}
-    title="聊天"
-    description="对话补全接口。"
-    href="/zh/ai-model/chat/openai/createchatcompletion"
+    icon={<PanelsTopLeft />}
+    title="统一接口"
+    description="通过统一端点访问 GPT、Claude、Gemini 等更多模型。"
   />
   <Card
-    icon={<Database />}
-    title="嵌入"
-    description="文本嵌入向量生成接口。"
-    href="/zh/ai-model/embeddings/createembedding"
+    icon={<Zap />}
+    title="高性能"
+    description="亚毫秒级路由和全球分发网络。"
   />
   <Card
-    icon={<Headphones />}
-    title="音频"
-    description="语音识别和语音合成接口。"
-    href="/zh/ai-model/audio/openai/createspeech"
+    icon={<Code />}
+    title="即插即用"
+    description="替换您的基础 URL，立即开始使用 NodeKey。"
   />
   <Card
-    icon={<Radio />}
-    title="实时语音"
-    description="实时音频流接口。"
-    href="/zh/ai-model/realtime/createrealtimesession"
-  />
-  <Card
-    icon={<Image />}
-    title="图像"
-    description="AI图像生成接口。"
-    href="/zh/ai-model/images/openai/post-v1-images-generations"
-  />
-  <Card
-    icon={<Video />}
-    title="视频"
-    description="AI视频生成接口。"
-    href="/zh/ai-model/videos/sora/createvideo"
+    icon={<ShieldCheck />}
+    title="企业级可靠性"
+    description="内置故障转移、负载均衡和智能重试逻辑。"
   />
 </Cards>
+
