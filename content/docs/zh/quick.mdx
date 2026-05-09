@@ -15,7 +15,7 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 如果您已经在使用 OpenAI SDK，只需更改基础 URL 即可。
 
-<Tabs items={['Python', 'Node.js', 'Curl']}>
+<Tabs items={['Python', 'Node.js', 'Shell']}>
   <Tab value="Python">
     ```python
 from openai import OpenAI
@@ -46,7 +46,7 @@ const completion = await client.chat.completions.create({
 });
     ```
   </Tab>
-  <Tab value="Curl">
+  <Tab value="Shell">
     ```bash
 curl -X POST "https://nodekey.xinghanyun.cn/v1/chat/completions" \
   -H "Authorization: Bearer YOUR_NODEKEY_KEY" \
