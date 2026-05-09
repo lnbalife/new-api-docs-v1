@@ -7,14 +7,14 @@
 @theme {
   --spacing-fd-container: 1436px;
 
-  --color-brand: hsl(26, 73%, 51%);
+  --color-brand: hsl(235, 53%, 65%);
   --color-brand-foreground: white;
-  --color-brand-secondary: #c6bb58;
-  --color-brand-secondary-foreground: #97890c;
-  --color-brand-200: hsl(33, 100%, 50%);
+  --color-brand-secondary: #7b7dff;
+  --color-brand-secondary-foreground: #504494;
+  --color-brand-200: hsl(240, 80%, 64%);
 
-  --color-landing-foreground: #59592a;
-  --color-landing-foreground-200: #a8a866;
+  --color-landing-foreground: #2f2a59;
+  --color-landing-foreground-200: #6a66a8;
 
   /* Fumadocs UI theme color (for navigation, TOC, etc.) */
   --color-fd-primary: hsl(250, 80%, 54%);
@@ -35,11 +35,11 @@
   --color-landing-foreground: #e4e2d0;
   --color-landing-foreground-200: #b7af7e;
 
-  --color-brand: #fff383;
-  --color-brand-secondary: #fc7744;
-  --color-brand-secondary-foreground: #521700;
-  --color-brand-foreground: black;
-  --color-brand-200: #fff7c8;
+  --color-brand: #7860ff;
+  --color-brand-secondary: #5336d8;
+  --color-brand-secondary-foreground: #512fcc;
+  --color-brand-foreground: rgb(67, 41, 184);
+  --color-brand-200: hsl(240 100% 90%);
   
   /* Fumadocs UI theme color (for navigation, TOC, etc. - dark mode) */
   --color-fd-primary: hsl(250 100% 80%);
