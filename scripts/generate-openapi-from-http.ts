@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { readFile } from 'node:fs/promises';
 
@@ -373,6 +373,12 @@ function isExcludedAiModelTag(tag: string): boolean {
 }
 
 async function readHttpSource(): Promise<HttpTxtRoot> {
+  const localFile = process.env.HTTP_SOURCE_FILE?.trim();
+  if (localFile) {
+    const raw = await readFile(localFile, 'utf8');
+    return JSON.parse(raw) as HttpTxtRoot;
+  }
+
   const DEFAULT_URL =
     'https://api.apifox.com/api/v1/projects/7484041/http-apis';
   const url = process.env.HTTP_SOURCE_URL?.trim() || DEFAULT_URL;
@@ -386,6 +392,34 @@ async function readHttpSource(): Promise<HttpTxtRoot> {
     return (await res.json()) as HttpTxtRoot;
   }
   throw new Error('No http source configured.');
+}
+
+async function readLocalHttpSources(): Promise<HttpEndpoint[]> {
+  const dir = './openapi';
+  let entries: Array<{ name: string; isFile: () => boolean }>;
+  try {
+    entries = (await readdir(dir, { withFileTypes: true })) as any;
+  } catch {
+    return [];
+  }
+
+  const endpoints: HttpEndpoint[] = [];
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.endsWith('.http-apis.json')) continue;
+
+    const filePath = path.join(dir, entry.name);
+    const raw = await readFile(filePath, 'utf8');
+    const root = JSON.parse(raw) as HttpTxtRoot;
+    if (!root?.success || !Array.isArray(root.data)) {
+      throw new Error(`Invalid local http source: ${filePath}`);
+    }
+    endpoints.push(...root.data);
+  }
+
+  if (endpoints.length > 0) {
+    console.log(`✅ Loaded ${endpoints.length} local endpoint(s) from ${dir}`);
+  }
+  return endpoints;
 }
 
 async function tryReadApifoxProjectDefs(): Promise<Map<string, any>> {
@@ -493,8 +527,13 @@ function buildSecurity(
 async function main() {
   const outRoot = process.env.OPENAPI_OUT_DIR?.trim() || './openapi/generated';
 
-  // Clean old output to prevent stale files
-  await rm(outRoot, { recursive: true, force: true });
+  const shouldClean =
+    (process.env.OPENAPI_CLEAN?.trim().toLowerCase() || 'true') !== 'false';
+
+  // Clean old output to prevent stale files unless running an incremental source.
+  if (shouldClean) {
+    await rm(outRoot, { recursive: true, force: true });
+  }
   await mkdir(outRoot, { recursive: true });
 
   const defs = await tryReadApifoxProjectDefs();
@@ -504,6 +543,9 @@ async function main() {
     throw new Error(
       'Invalid http source: expected { success: true, data: [] }'
     );
+  }
+  if (!process.env.HTTP_SOURCE_FILE?.trim()) {
+    root.data.push(...(await readLocalHttpSources()));
   }
 
   let count = 0;

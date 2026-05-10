@@ -1,0 +1,296 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Nano Banana 图片生成（Gemini 原生格式）",
+    "version": "1.0.0",
+    "description": "`gemini-2.5-flash-image`（Nano Banana）图片生成。请求路径中的 `{model}` 填 `gemini-2.5-flash-image`；`generationConfig.responseModalities` 需要包含 `IMAGE`，图片参数放在 `generationConfig.imageConfig`。"
+  },
+  "tags": [
+    {
+      "name": "图像（Images）/Nano Banana"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/v1beta/models/{model}:generateContent": {
+      "post": {
+        "tags": [
+          "图像（Images）/Nano Banana"
+        ],
+        "summary": "Nano Banana 图片生成（Gemini 原生格式）",
+        "description": "`gemini-2.5-flash-image`（Nano Banana）图片生成。请求路径中的 `{model}` 填 `gemini-2.5-flash-image`；`generationConfig.responseModalities` 需要包含 `IMAGE`，图片参数放在 `generationConfig.imageConfig`。",
+        "operationId": "createnanobananaimagegemini",
+        "parameters": [
+          {
+            "name": "model",
+            "in": "path",
+            "required": true,
+            "description": "模型名称，填写 `gemini-2.5-flash-image`。",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "gemini-2.5-flash-image"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "contents": {
+                    "type": "array",
+                    "description": "Gemini 原生消息数组。",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "消息角色。首条未传时项目会补为 `user`。"
+                        },
+                        "parts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string",
+                                "description": "文本提示词。"
+                              },
+                              "inlineData": {
+                                "type": "object",
+                                "description": "可选的输入图片，支持 camelCase。项目也兼容 `inline_data`。",
+                                "properties": {
+                                  "mimeType": {
+                                    "type": "string",
+                                    "enum": [
+                                      "image/png",
+                                      "image/jpeg",
+                                      "image/webp",
+                                      "image/heic",
+                                      "image/heif"
+                                    ]
+                                  },
+                                  "data": {
+                                    "type": "string",
+                                    "description": "Base64 图片内容，不包含 data URI 前缀。"
+                                  }
+                                },
+                                "required": [
+                                  "mimeType",
+                                  "data"
+                                ]
+                              },
+                              "fileData": {
+                                "type": "object",
+                                "description": "可选的文件 URI 输入。",
+                                "properties": {
+                                  "mimeType": {
+                                    "type": "string"
+                                  },
+                                  "fileUri": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "x-apifox-orders": [
+                              "text",
+                              "inlineData",
+                              "fileData"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "parts"
+                      ],
+                      "x-apifox-orders": [
+                        "role",
+                        "parts"
+                      ]
+                    }
+                  },
+                  "generationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "responseModalities": {
+                        "type": "array",
+                        "description": "返回模态。图片生成需要包含 `IMAGE`；如需同时返回文本，可传 `TEXT`。",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "TEXT",
+                            "IMAGE"
+                          ]
+                        }
+                      },
+                      "imageConfig": {
+                        "type": "object",
+                        "description": "图片生成配置。项目也兼容 snake_case 的 `image_config`。",
+                        "properties": {
+                          "aspectRatio": {
+                            "type": "string",
+                            "description": "图片比例，例如 `1:1`、`16:9`、`9:16`、`4:3`、`3:4`。"
+                          },
+                          "imageSize": {
+                            "type": "string",
+                            "description": "图片尺寸档位，例如 `1K`、`2K`、`4K`。"
+                          }
+                        },
+                        "x-apifox-orders": [
+                          "aspectRatio",
+                          "imageSize"
+                        ]
+                      },
+                      "thinkingConfig": {
+                        "type": "object",
+                        "properties": {
+                          "includeThoughts": {
+                            "type": "boolean"
+                          },
+                          "thinkingBudget": {
+                            "type": "integer"
+                          }
+                        },
+                        "x-apifox-orders": [
+                          "includeThoughts",
+                          "thinkingBudget"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "responseModalities"
+                    ],
+                    "x-apifox-orders": [
+                      "responseModalities",
+                      "imageConfig",
+                      "thinkingConfig"
+                    ]
+                  },
+                  "safetySettings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "category": {
+                          "type": "string"
+                        },
+                        "threshold": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "contents",
+                  "generationConfig"
+                ],
+                "x-apifox-orders": [
+                  "contents",
+                  "generationConfig",
+                  "safetySettings"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功。原生 Gemini 响应中生成图片通常位于 `candidates[].content.parts[].inlineData`。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "candidates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "content": {
+                            "type": "object",
+                            "properties": {
+                              "role": {
+                                "type": "string"
+                              },
+                              "parts": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "text": {
+                                      "type": "string"
+                                    },
+                                    "inlineData": {
+                                      "type": "object",
+                                      "properties": {
+                                        "mimeType": {
+                                          "type": "string"
+                                        },
+                                        "data": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "finishReason": {
+                            "type": "string"
+                          },
+                          "safetyRatings": {
+                            "type": "array",
+                            "items": {
+                              "type": "object"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "usageMetadata": {
+                      "type": "object",
+                      "properties": {
+                        "promptTokenCount": {
+                          "type": "integer"
+                        },
+                        "candidatesTokenCount": {
+                          "type": "integer"
+                        },
+                        "totalTokenCount": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "candidates",
+                    "usageMetadata"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

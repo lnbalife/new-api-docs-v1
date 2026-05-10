@@ -1,0 +1,141 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "查询 Seedance 视频任务",
+    "version": "1.0.0",
+    "description": "查询豆包 Seedance 异步视频任务状态和结果。任务完成后，视频地址位于 `metadata.url`。"
+  },
+  "tags": [
+    {
+      "name": "视频（Videos）/Seedance"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/v1/video/generations/{task_id}": {
+      "get": {
+        "tags": [
+          "视频（Videos）/Seedance"
+        ],
+        "summary": "查询 Seedance 视频任务",
+        "description": "查询豆包 Seedance 异步视频任务状态和结果。任务完成后，视频地址位于 `metadata.url`。",
+        "operationId": "getseedancevideo",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "description": "提交任务时返回的公开任务 ID。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "task_id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "queued",
+                        "in_progress",
+                        "completed",
+                        "failed",
+                        "unknown"
+                      ]
+                    },
+                    "progress": {
+                      "type": "integer"
+                    },
+                    "created_at": {
+                      "type": "integer"
+                    },
+                    "completed_at": {
+                      "type": "integer"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "任务完成后的视频 URL。"
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "url"
+                      ]
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "code",
+                        "message"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object",
+                    "model",
+                    "status",
+                    "progress",
+                    "created_at"
+                  ],
+                  "x-apifox-orders": [
+                    "id",
+                    "task_id",
+                    "object",
+                    "model",
+                    "status",
+                    "progress",
+                    "created_at",
+                    "completed_at",
+                    "metadata",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

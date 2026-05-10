@@ -1,65 +1,36 @@
 ---
-title: 接口文档
-description: New API Complete API Documentation
+title: Overview
+description: The NodeKey AI Aggregation Platform is built on industry standards as a unified gateway, allowing developers to access world-class AI models through a single, optimized interface. Fully compatible with OpenAI API specifications.
+icon: Globe
 ---
 
 import { Card, Cards } from 'fumadocs-ui/components/card';
 import {
-  MessageSquare,
-  Database,
-  Headphones,
-  Radio,
-  Image,
-  Video,
+  PanelsTopLeft,
+  Zap,
+  Code,
+  ShieldCheck,
 } from 'lucide-react';
-
-## Overview
-
-New API provides a complete set of RESTful AI Model APIs. These interfaces allow you to invoke various AI capabilities, compatible with the OpenAI API format.
-
-<Callout title="Online Debugging">
-  You can visit [Apifox Playground](https://apifox.newapi.ai/) to test and debug API interfaces online, or browse the API documentation below.
-</Callout>
-
-## AI Model APIs
-
-AI Model APIs provide calls for various AI capabilities, compatible with the OpenAI API format.
 
 <Cards>
   <Card
-    icon={<MessageSquare />}
-    title="Chat"
-    description="Conversation completion API."
-    href="/en/ai-model/chat/openai/createchatcompletion"
+    icon={<PanelsTopLeft />}
+    title="Unified Interface"
+    description="Access more models like GPT, Claude, Gemini, etc. through a unified endpoint."
   />
   <Card
-    icon={<Database />}
-    title="Embeddings"
-    description="Text embedding vector generation API."
-    href="/en/ai-model/embeddings/createembedding"
+    icon={<Zap />}
+    title="High Performance"
+    description="Sub-millisecond routing and global distribution network."
   />
   <Card
-    icon={<Headphones />}
-    title="Audio"
-    description="Speech recognition and speech synthesis API."
-    href="/en/ai-model/audio/openai/createspeech"
+    icon={<Code />}
+    title="Plug and Play"
+    description="Replace your base URL and start using NodeKey immediately."
   />
   <Card
-    icon={<Radio />}
-    title="Real-time Audio"
-    description="Real-time audio streaming API."
-    href="/en/ai-model/realtime/createrealtimesession"
-  />
-  <Card
-    icon={<Image />}
-    title="Images"
-    description="AI image generation API."
-    href="/en/ai-model/images/openai/post-v1-images-generations"
-  />
-  <Card
-    icon={<Video />}
-    title="Videos"
-    description="AI video generation API."
-    href="/en/ai-model/videos/sora/createvideo"
+    icon={<ShieldCheck />}
+    title="Enterprise-Level Reliability"
+    description="Built-in failover, load balancing, and intelligent retry logic."
   />
 </Cards>

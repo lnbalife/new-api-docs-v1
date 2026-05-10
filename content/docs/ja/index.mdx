@@ -1,65 +1,36 @@
 ---
-title: 接口文档
-description: New API の完全なインターフェースドキュメント
+title: 概要
+description: NodeKey AIアグリゲーションプラットフォームは、業界標準に基づいて構築された統一ゲートウェイであり、開発者が単一の最適化されたインターフェースを介して世界クラスのAIモデルにアクセスできるようにします。OpenAI API仕様に100%互換しています。
+icon: Globe
 ---
 
 import { Card, Cards } from 'fumadocs-ui/components/card';
 import {
-  MessageSquare,
-  Database,
-  Headphones,
-  Radio,
-  Image,
-  Video,
+  PanelsTopLeft,
+  Zap,
+  Code,
+  ShieldCheck,
 } from 'lucide-react';
-
-## 概要
-
-New API は完全な RESTful AI モデル API を提供します。これらのインターフェースを通じて、OpenAI API 形式と互換性のある様々な AI 機能を呼び出すことができます。
-
-<Callout title="オンラインデバッグ">
-  [Apifox 操練場](https://apifox.newapi.ai/) にアクセスしてAPIインターフェースをオンラインでテストおよびデバッグするか、以下のAPIドキュメントを参照してください。
-</Callout>
-
-## AIモデルインターフェース
-
-AIモデルインターフェースは、OpenAI API形式と互換性のある様々なAI機能の呼び出しを提供します。
 
 <Cards>
   <Card
-    icon={<MessageSquare />}
-    title="チャット"
-    description="会話補完インターフェース。"
-    href="/ja/ai-model/chat/openai/createchatcompletion"
+    icon={<PanelsTopLeft />}
+    title="統一インターフェース"
+    description="統一エンドポイントを介してGPT、Claude、Geminiなどのモデルにアクセスします。"
   />
   <Card
-    icon={<Database />}
-    title="埋め込み"
-    description="テキスト埋め込みベクトル生成インターフェース。"
-    href="/ja/ai-model/embeddings/createembedding"
+    icon={<Zap />}
+    title="高性能"
+    description="マイクロ秒単位のルーティングとグローバル配信ネットワーク。"
   />
   <Card
-    icon={<Headphones />}
-    title="オーディオ"
-    description="音声認識および音声合成インターフェース。"
-    href="/ja/ai-model/audio/openai/createspeech"
+    icon={<Code />}
+    title="プラグアンドプレイ"
+    description="基本URLを置き換えて、すぐにNodeKeyを使用開始します。"
   />
   <Card
-    icon={<Radio />}
-    title="リアルタイム音声"
-    description="リアルタイムオーディオストリームインターフェース。"
-    href="/ja/ai-model/realtime/createrealtimesession"
-  />
-  <Card
-    icon={<Image />}
-    title="画像"
-    description="AI画像生成インターフェース。"
-    href="/ja/ai-model/images/openai/post-v1-images-generations"
-  />
-  <Card
-    icon={<Video />}
-    title="ビデオ"
-    description="AIビデオ生成インターフェース。"
-    href="/ja/ai-model/videos/sora/createvideo"
+    icon={<ShieldCheck />}
+    title="エンタープライズレベルの信頼性"
+    description="内蔵のフェイルオーバー、負荷分散、インテリジェントな再試行ロジック。"
   />
 </Cards>

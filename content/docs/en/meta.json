@@ -1,6 +1,12 @@
 {
-  "title": "接口文档",
+  "title": "API Documentation",
   "icon": "Code",
   "root": true,
-  "pages": ["index", "ai-model"]
+  "pages": [
+    "index",
+    "auth",
+    "quick",
+    "question",
+    "ai-model"
+  ]
 }

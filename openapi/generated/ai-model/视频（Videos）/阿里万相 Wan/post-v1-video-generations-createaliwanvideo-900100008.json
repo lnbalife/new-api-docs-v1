@@ -1,0 +1,262 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "阿里万相 Wan 视频生成",
+    "version": "1.0.0",
+    "description": "阿里通义万相 Wan 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。支持文生视频、图生视频；图生视频推荐通过 `input_reference` 传入首帧图，更多上游 `input` 与 `parameters` 参数可通过 `metadata` 透传。"
+  },
+  "tags": [
+    {
+      "name": "视频（Videos）/阿里万相 Wan"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/v1/video/generations": {
+      "post": {
+        "tags": [
+          "视频（Videos）/阿里万相 Wan"
+        ],
+        "summary": "阿里万相 Wan 视频生成",
+        "description": "阿里通义万相 Wan 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。支持文生视频、图生视频；图生视频推荐通过 `input_reference` 传入首帧图，更多上游 `input` 与 `parameters` 参数可通过 `metadata` 透传。",
+        "operationId": "createaliwanvideo",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "enum": [
+                      "wan2.7-i2v-2026-04-25",
+                      "wan2.7-i2v",
+                      "wan2.5-i2v-preview",
+                      "wan2.2-i2v-flash",
+                      "wan2.2-i2v-plus",
+                      "wanx2.1-i2v-plus",
+                      "wanx2.1-i2v-turbo"
+                    ],
+                    "description": "阿里万相 Wan 视频模型名称。当前项目适配器支持以上模型。"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "视频生成提示词。"
+                  },
+                  "input_reference": {
+                    "type": "string",
+                    "description": "图生视频首帧图 URL 或 Base64；项目会转换为上游 `input.img_url`。"
+                  },
+                  "seconds": {
+                    "type": "string",
+                    "description": "视频时长，字符串格式；项目会转换为上游 `parameters.duration`。"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "视频时长，整数秒。若同时传 `seconds`，当前项目优先使用 `duration`。未传时默认 5 秒。"
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "分辨率或尺寸。可传 `480P`、`720P`、`1080P`，或 `1280*720`、`1920*1080` 这类尺寸；带 `*` 时作为上游 `parameters.size`，否则作为 `parameters.resolution`。"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "description": "阿里万相上游扩展参数。适配器会将该对象合并进阿里请求体，支持嵌套 `input` 与 `parameters`。注意项目会强制将 `parameters.watermark` 置为 `false`。",
+                    "properties": {
+                      "input": {
+                        "type": "object",
+                        "description": "透传上游 input 参数。",
+                        "properties": {
+                          "img_url": {
+                            "type": "string",
+                            "description": "图生视频首帧图 URL 或 Base64。也可使用顶层 `input_reference`。"
+                          },
+                          "first_frame_url": {
+                            "type": "string",
+                            "description": "首尾帧生视频的首帧图片 URL。"
+                          },
+                          "last_frame_url": {
+                            "type": "string",
+                            "description": "首尾帧生视频的尾帧图片 URL。"
+                          },
+                          "negative_prompt": {
+                            "type": "string",
+                            "description": "反向提示词。"
+                          },
+                          "template": {
+                            "type": "string",
+                            "description": "视频特效模板。"
+                          },
+                          "audio_url": {
+                            "type": "string",
+                            "description": "音频 URL，部分模型支持。"
+                          }
+                        },
+                        "x-apifox-orders": [
+                          "img_url",
+                          "first_frame_url",
+                          "last_frame_url",
+                          "negative_prompt",
+                          "template",
+                          "audio_url"
+                        ]
+                      },
+                      "parameters": {
+                        "type": "object",
+                        "description": "透传上游 parameters 参数。",
+                        "properties": {
+                          "resolution": {
+                            "type": "string",
+                            "description": "分辨率，例如 `480P`、`720P`、`1080P`。"
+                          },
+                          "ratio": {
+                            "type": "string",
+                            "enum": [
+                              "16:9",
+                              "9:16",
+                              "1:1",
+                              "4:3",
+                              "3:4"
+                            ],
+                            "description": "视频比例。仅允许以上取值；非法值会被项目清空。"
+                          },
+                          "size": {
+                            "type": "string",
+                            "description": "尺寸，例如 `832*480`、`1280*720`、`1920*1080`。"
+                          },
+                          "duration": {
+                            "type": "integer",
+                            "description": "视频时长。"
+                          },
+                          "prompt_extend": {
+                            "type": "boolean",
+                            "description": "是否开启提示词智能改写；项目默认开启。"
+                          },
+                          "audio": {
+                            "type": "boolean",
+                            "description": "是否生成或保留音频，部分模型支持。"
+                          },
+                          "seed": {
+                            "type": "integer",
+                            "description": "随机种子。"
+                          },
+                          "watermark": {
+                            "type": "boolean",
+                            "description": "水印参数。项目最终会强制置为 `false`。"
+                          }
+                        },
+                        "x-apifox-orders": [
+                          "resolution",
+                          "ratio",
+                          "size",
+                          "duration",
+                          "prompt_extend",
+                          "audio",
+                          "seed",
+                          "watermark"
+                        ]
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "input",
+                      "parameters"
+                    ]
+                  }
+                },
+                "required": [
+                  "model",
+                  "prompt"
+                ],
+                "x-apifox-orders": [
+                  "model",
+                  "prompt",
+                  "input_reference",
+                  "seconds",
+                  "duration",
+                  "size",
+                  "metadata"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功创建视频生成任务。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "公开任务 ID。"
+                    },
+                    "task_id": {
+                      "type": "string",
+                      "description": "兼容字段，公开任务 ID。"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "对象类型，通常为 `video`。"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "queued",
+                        "in_progress",
+                        "completed",
+                        "failed",
+                        "unknown"
+                      ]
+                    },
+                    "progress": {
+                      "type": "integer"
+                    },
+                    "created_at": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object",
+                    "model",
+                    "status",
+                    "progress",
+                    "created_at"
+                  ],
+                  "x-apifox-orders": [
+                    "id",
+                    "task_id",
+                    "object",
+                    "model",
+                    "status",
+                    "progress",
+                    "created_at"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

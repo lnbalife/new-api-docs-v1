@@ -1,0 +1,309 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Seedance 视频生成",
+    "version": "1.0.0",
+    "description": "豆包 Seedance 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。支持文生视频、图生视频，也可以通过 `metadata.content` 传入视频/音频等多模态参考内容。"
+  },
+  "tags": [
+    {
+      "name": "视频（Videos）/Seedance"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/v1/video/generations": {
+      "post": {
+        "tags": [
+          "视频（Videos）/Seedance"
+        ],
+        "summary": "Seedance 视频生成",
+        "description": "豆包 Seedance 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。支持文生视频、图生视频，也可以通过 `metadata.content` 传入视频/音频等多模态参考内容。",
+        "operationId": "createseedancevideo",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "enum": [
+                      "doubao-seedance-1-0-pro-250528",
+                      "doubao-seedance-1-0-lite-t2v",
+                      "doubao-seedance-1-0-lite-i2v",
+                      "doubao-seedance-1-5-pro-251215",
+                      "doubao-seedance-2-0-260128",
+                      "doubao-seedance-2-0-fast-260128"
+                    ],
+                    "description": "Seedance 模型名称。"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "视频生成提示词。项目会把该字段追加为上游 `content` 中的 text 项。"
+                  },
+                  "image": {
+                    "type": "string",
+                    "description": "单张图生视频参考图 URL。项目会转换为上游 `content[].image_url.url`。"
+                  },
+                  "images": {
+                    "type": "array",
+                    "description": "多张图生视频参考图 URL。项目会逐项转换为上游 `content[].image_url.url`。",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "seconds": {
+                    "type": "string",
+                    "description": "视频时长，字符串格式；项目会转换为上游 `duration`。"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "兼容字段，整数秒。豆包 Seedance 上游请求建议使用 `seconds`，或通过 `metadata.duration` 透传。"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "description": "Seedance 上游扩展参数。适配器会将该对象合并进豆包任务请求。",
+                    "properties": {
+                      "content": {
+                        "type": "array",
+                        "description": "上游多模态内容数组。项目会移除其中已有的 text 项，并把顶层 `prompt` 作为最终 text 项追加。",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "text",
+                                "image_url",
+                                "video_url",
+                                "audio_url"
+                              ]
+                            },
+                            "text": {
+                              "type": "string"
+                            },
+                            "image_url": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "url"
+                              ]
+                            },
+                            "video_url": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "url"
+                              ]
+                            },
+                            "audio_url": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "url"
+                              ]
+                            },
+                            "role": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "type"
+                          ],
+                          "x-apifox-orders": [
+                            "type",
+                            "text",
+                            "image_url",
+                            "video_url",
+                            "audio_url",
+                            "role"
+                          ]
+                        }
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "description": "输出分辨率，例如 `720p`、`1080p`。"
+                      },
+                      "ratio": {
+                        "type": "string",
+                        "description": "视频比例，例如 `16:9`、`9:16`、`1:1`、`4:3`、`3:4`。"
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "description": "视频时长。"
+                      },
+                      "frames": {
+                        "type": "integer",
+                        "description": "帧数。"
+                      },
+                      "seed": {
+                        "type": "integer",
+                        "description": "随机种子。"
+                      },
+                      "camera_fixed": {
+                        "type": "boolean",
+                        "description": "是否固定镜头。"
+                      },
+                      "watermark": {
+                        "type": "boolean",
+                        "description": "是否添加水印。"
+                      },
+                      "generate_audio": {
+                        "type": "boolean",
+                        "description": "是否生成音频。"
+                      },
+                      "return_last_frame": {
+                        "type": "boolean",
+                        "description": "是否返回最后一帧。"
+                      },
+                      "service_tier": {
+                        "type": "string",
+                        "description": "服务档位。"
+                      },
+                      "callback_url": {
+                        "type": "string",
+                        "description": "上游回调地址。"
+                      },
+                      "tools": {
+                        "type": "array",
+                        "description": "工具配置，例如 web search。",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string"
+                            }
+                          },
+                          "x-apifox-orders": [
+                            "type"
+                          ]
+                        }
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "content",
+                      "resolution",
+                      "ratio",
+                      "duration",
+                      "frames",
+                      "seed",
+                      "camera_fixed",
+                      "watermark",
+                      "generate_audio",
+                      "return_last_frame",
+                      "service_tier",
+                      "callback_url",
+                      "tools"
+                    ]
+                  }
+                },
+                "required": [
+                  "model",
+                  "prompt"
+                ],
+                "x-apifox-orders": [
+                  "model",
+                  "prompt",
+                  "image",
+                  "images",
+                  "seconds",
+                  "duration",
+                  "metadata"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功创建视频生成任务。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "公开任务 ID。"
+                    },
+                    "task_id": {
+                      "type": "string",
+                      "description": "兼容字段，公开任务 ID。"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "对象类型，通常为 `video`。"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "queued",
+                        "in_progress",
+                        "completed",
+                        "failed",
+                        "unknown"
+                      ]
+                    },
+                    "progress": {
+                      "type": "integer"
+                    },
+                    "created_at": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object",
+                    "model",
+                    "status",
+                    "progress",
+                    "created_at"
+                  ],
+                  "x-apifox-orders": [
+                    "id",
+                    "task_id",
+                    "object",
+                    "model",
+                    "status",
+                    "progress",
+                    "created_at"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

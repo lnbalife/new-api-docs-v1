@@ -77,7 +77,13 @@ export const CustomSidebarFolder: FC<{
           {item.name}
         </SidebarFolderTrigger>
       )}
-      <SidebarFolderContent>{children}</SidebarFolderContent>
+      <SidebarFolderContent
+        style={{
+          '--sidebar-item-offset': `calc(var(--spacing) * ${(level + 1) * 3})`,
+        } as React.CSSProperties}
+      >
+        {children}
+      </SidebarFolderContent>
     </SidebarFolder>
   );
 };

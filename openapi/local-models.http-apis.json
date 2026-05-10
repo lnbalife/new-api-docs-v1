@@ -1,0 +1,1618 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 900100001,
+      "name": "GPT Image 2 图像生成",
+      "description": "使用 OpenAI 图片接口生成图像。当前项目支持 `gpt-image-2-1k`、`gpt-image-2-2k`、`gpt-image-2-4k` 三个模型变体；未传 `quality` 时默认使用 `medium`，未传 `n` 或传 `0` 时按 `1` 处理。",
+      "operationId": "createGptImage2Image",
+      "method": "post",
+      "path": "/v1/images/generations",
+      "tags": ["图像（Images）/GPT Image 2"],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [583570]
+          }
+        ]
+      },
+      "requestBody": {
+        "type": "application/json",
+        "mediaType": "application/json",
+        "required": true,
+        "jsonSchema": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": ["gpt-image-2-1k", "gpt-image-2-2k", "gpt-image-2-4k"],
+              "description": "模型名称。`gpt-image-2-1k` 默认生成 `1024x1024`；`gpt-image-2-2k` 默认生成 `2048x2048`；`gpt-image-2-4k` 默认生成 `3840x2160`。"
+            },
+            "prompt": {
+              "type": "string",
+              "description": "图像提示词。"
+            },
+            "n": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "生成图片数量。未传或传 `0` 时按 `1` 处理。"
+            },
+            "size": {
+              "type": "string",
+              "description": "输出尺寸。`gpt-image-2-1k` 支持 `1024x1024`、`1536x1024`、`1024x1536`；`gpt-image-2-2k` 支持 `2048x2048`、`2048x1152`；`gpt-image-2-4k` 支持 `3840x2160`、`2160x3840`。"
+            },
+            "quality": {
+              "type": "string",
+              "default": "medium",
+              "description": "生成质量。项目未传时默认补为 `medium`。"
+            },
+            "response_format": {
+              "type": "string",
+              "enum": ["url", "b64_json"],
+              "description": "返回图片格式。"
+            },
+            "background": {
+              "type": "string",
+              "description": "透传给上游的背景设置。"
+            },
+            "moderation": {
+              "type": "string",
+              "description": "透传给上游的内容审核设置。"
+            },
+            "output_format": {
+              "type": "string",
+              "description": "透传给上游的输出格式。"
+            },
+            "output_compression": {
+              "type": "integer",
+              "description": "透传给上游的输出压缩参数。"
+            },
+            "partial_images": {
+              "description": "透传给上游的局部图片参数。"
+            },
+            "user": {
+              "type": "string",
+              "description": "最终用户标识。"
+            }
+          },
+          "required": ["model", "prompt"],
+          "x-apifox-orders": [
+            "model",
+            "prompt",
+            "n",
+            "size",
+            "quality",
+            "response_format",
+            "background",
+            "moderation",
+            "output_format",
+            "output_compression",
+            "partial_images",
+            "user"
+          ]
+        }
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "created": {
+                "type": "integer"
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    },
+                    "b64_json": {
+                      "type": "string"
+                    },
+                    "revised_prompt": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apifox-orders": ["url", "b64_json", "revised_prompt"]
+                }
+              },
+              "usage": {
+                "type": "object",
+                "properties": {
+                  "prompt_tokens": {
+                    "type": "integer"
+                  },
+                  "completion_tokens": {
+                    "type": "integer"
+                  },
+                  "total_tokens": {
+                    "type": "integer"
+                  },
+                  "input_tokens": {
+                    "type": "integer"
+                  },
+                  "output_tokens": {
+                    "type": "integer"
+                  },
+                  "prompt_tokens_details": {
+                    "type": "object",
+                    "properties": {
+                      "text_tokens": {
+                        "type": "integer"
+                      },
+                      "image_tokens": {
+                        "type": "integer"
+                      },
+                      "cached_tokens": {
+                        "type": "integer"
+                      }
+                    }
+                  },
+                  "completion_tokens_details": {
+                    "type": "object",
+                    "properties": {
+                      "image_tokens": {
+                        "type": "integer"
+                      },
+                      "text_tokens": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "x-apifox-orders": [
+                  "prompt_tokens",
+                  "completion_tokens",
+                  "total_tokens",
+                  "input_tokens",
+                  "output_tokens",
+                  "prompt_tokens_details",
+                  "completion_tokens_details"
+                ]
+              }
+            },
+            "required": ["created", "data"],
+            "x-apifox-orders": ["created", "data", "usage"]
+          }
+        }
+      ]
+    },
+    {
+      "id": 900100002,
+      "name": "Nano Banana 图片生成（Gemini 原生格式）",
+      "description": "`gemini-2.5-flash-image`（Nano Banana）图片生成。请求路径中的 `{model}` 填 `gemini-2.5-flash-image`；`generationConfig.responseModalities` 需要包含 `IMAGE`，图片参数放在 `generationConfig.imageConfig`。",
+      "operationId": "createNanoBananaImageGemini",
+      "method": "post",
+      "path": "/v1beta/models/{model}:generateContent",
+      "tags": ["图像（Images）/Nano Banana"],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [583570]
+          }
+        ]
+      },
+      "parameters": {
+        "path": [
+          {
+            "name": "model",
+            "required": true,
+            "description": "模型名称，填写 `gemini-2.5-flash-image`。",
+            "schema": {
+              "type": "string",
+              "enum": ["gemini-2.5-flash-image"]
+            }
+          }
+        ]
+      },
+      "requestBody": {
+        "type": "application/json",
+        "mediaType": "application/json",
+        "required": true,
+        "jsonSchema": {
+          "type": "object",
+          "properties": {
+            "contents": {
+              "type": "array",
+              "description": "Gemini 原生消息数组。",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "description": "消息角色。首条未传时项目会补为 `user`。"
+                  },
+                  "parts": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "description": "文本提示词。"
+                        },
+                        "inlineData": {
+                          "type": "object",
+                          "description": "可选的输入图片，支持 camelCase。项目也兼容 `inline_data`。",
+                          "properties": {
+                            "mimeType": {
+                              "type": "string",
+                              "enum": [
+                                "image/png",
+                                "image/jpeg",
+                                "image/webp",
+                                "image/heic",
+                                "image/heif"
+                              ]
+                            },
+                            "data": {
+                              "type": "string",
+                              "description": "Base64 图片内容，不包含 data URI 前缀。"
+                            }
+                          },
+                          "required": ["mimeType", "data"]
+                        },
+                        "fileData": {
+                          "type": "object",
+                          "description": "可选的文件 URI 输入。",
+                          "properties": {
+                            "mimeType": {
+                              "type": "string"
+                            },
+                            "fileUri": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "x-apifox-orders": ["text", "inlineData", "fileData"]
+                    }
+                  }
+                },
+                "required": ["parts"],
+                "x-apifox-orders": ["role", "parts"]
+              }
+            },
+            "generationConfig": {
+              "type": "object",
+              "properties": {
+                "responseModalities": {
+                  "type": "array",
+                  "description": "返回模态。图片生成需要包含 `IMAGE`；如需同时返回文本，可传 `TEXT`。",
+                  "items": {
+                    "type": "string",
+                    "enum": ["TEXT", "IMAGE"]
+                  }
+                },
+                "imageConfig": {
+                  "type": "object",
+                  "description": "图片生成配置。项目也兼容 snake_case 的 `image_config`。",
+                  "properties": {
+                    "aspectRatio": {
+                      "type": "string",
+                      "description": "图片比例，例如 `1:1`、`16:9`、`9:16`、`4:3`、`3:4`。"
+                    },
+                    "imageSize": {
+                      "type": "string",
+                      "description": "图片尺寸档位，例如 `1K`、`2K`、`4K`。"
+                    }
+                  },
+                  "x-apifox-orders": ["aspectRatio", "imageSize"]
+                },
+                "thinkingConfig": {
+                  "type": "object",
+                  "properties": {
+                    "includeThoughts": {
+                      "type": "boolean"
+                    },
+                    "thinkingBudget": {
+                      "type": "integer"
+                    }
+                  },
+                  "x-apifox-orders": ["includeThoughts", "thinkingBudget"]
+                }
+              },
+              "required": ["responseModalities"],
+              "x-apifox-orders": [
+                "responseModalities",
+                "imageConfig",
+                "thinkingConfig"
+              ]
+            },
+            "safetySettings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string"
+                  },
+                  "threshold": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": ["contents", "generationConfig"],
+          "x-apifox-orders": ["contents", "generationConfig", "safetySettings"]
+        }
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功。原生 Gemini 响应中生成图片通常位于 `candidates[].content.parts[].inlineData`。",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "candidates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string"
+                        },
+                        "parts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string"
+                              },
+                              "inlineData": {
+                                "type": "object",
+                                "properties": {
+                                  "mimeType": {
+                                    "type": "string"
+                                  },
+                                  "data": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "finishReason": {
+                      "type": "string"
+                    },
+                    "safetyRatings": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              },
+              "usageMetadata": {
+                "type": "object",
+                "properties": {
+                  "promptTokenCount": {
+                    "type": "integer"
+                  },
+                  "candidatesTokenCount": {
+                    "type": "integer"
+                  },
+                  "totalTokenCount": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "x-apifox-orders": ["candidates", "usageMetadata"]
+          }
+        }
+      ]
+    },
+    {
+      "id": 900100003,
+      "name": "Nano Banana 图片生成（OpenAI 聊天格式）",
+      "description": "使用 OpenAI Chat Completions 兼容格式调用 `gemini-2.5-flash-image`（Nano Banana）。项目会转换为 Gemini 请求；图片配置通过 `extra_body.google.image_config` 传入，字段必须使用 snake_case。",
+      "operationId": "createNanoBananaImageChat",
+      "method": "post",
+      "path": "/v1/chat/completions",
+      "tags": ["图像（Images）/Nano Banana"],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [583570]
+          }
+        ]
+      },
+      "requestBody": {
+        "type": "application/json",
+        "mediaType": "application/json",
+        "required": true,
+        "jsonSchema": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": ["gemini-2.5-flash-image"],
+              "description": "模型名称。"
+            },
+            "messages": {
+              "type": "array",
+              "description": "OpenAI 聊天消息。图片会以 Markdown data URI 形式返回到 `message.content` 中。",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "enum": ["system", "developer", "user", "assistant", "tool"]
+                  },
+                  "content": {
+                    "description": "文本内容，或包含 `text`、`image_url` 等片段的数组。",
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": ["text", "image_url"]
+                            },
+                            "text": {
+                              "type": "string"
+                            },
+                            "image_url": {
+                              "oneOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["url"]
+                                }
+                              ]
+                            }
+                          },
+                          "required": ["type"],
+                          "x-apifox-orders": ["type", "text", "image_url"]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "required": ["role", "content"],
+                "x-apifox-orders": ["role", "content"]
+              }
+            },
+            "stream": {
+              "type": "boolean",
+              "description": "是否流式返回。"
+            },
+            "extra_body": {
+              "type": "object",
+              "properties": {
+                "google": {
+                  "type": "object",
+                  "properties": {
+                    "image_config": {
+                      "type": "object",
+                      "description": "Gemini 图片参数。注意必须使用 `image_config`、`aspect_ratio`、`image_size`，不要使用 camelCase。",
+                      "properties": {
+                        "aspect_ratio": {
+                          "type": "string",
+                          "description": "图片比例，例如 `1:1`、`16:9`、`9:16`、`4:3`、`3:4`。"
+                        },
+                        "image_size": {
+                          "type": "string",
+                          "description": "图片尺寸档位，例如 `1K`、`2K`、`4K`。"
+                        }
+                      },
+                      "x-apifox-orders": ["aspect_ratio", "image_size"]
+                    },
+                    "thinking_config": {
+                      "type": "object",
+                      "properties": {
+                        "include_thoughts": {
+                          "type": "boolean"
+                        },
+                        "thinking_budget": {
+                          "type": "integer"
+                        }
+                      },
+                      "x-apifox-orders": ["include_thoughts", "thinking_budget"]
+                    }
+                  },
+                  "x-apifox-orders": ["image_config", "thinking_config"]
+                }
+              },
+              "x-apifox-orders": ["google"]
+            }
+          },
+          "required": ["model", "messages"],
+          "x-apifox-orders": ["model", "messages", "stream", "extra_body"]
+        }
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功。非流式响应兼容 OpenAI Chat Completions，图片通常以 Markdown data URI 形式出现在 `choices[].message.content`。",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "object": {
+                "type": "string"
+              },
+              "created": {
+                "type": "integer"
+              },
+              "model": {
+                "type": "string"
+              },
+              "choices": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string"
+                        },
+                        "content": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "finish_reason": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "usage": {
+                "type": "object",
+                "properties": {
+                  "prompt_tokens": {
+                    "type": "integer"
+                  },
+                  "completion_tokens": {
+                    "type": "integer"
+                  },
+                  "total_tokens": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "required": ["id", "object", "created", "model", "choices"],
+            "x-apifox-orders": ["id", "object", "created", "model", "choices", "usage"]
+          }
+        }
+      ]
+    },
+    {
+      "id": 900100004,
+      "name": "Happyhorse 快乐马 r2v 视频生成",
+      "description": "`happyhorse-1.0-r2v`（Happyhorse 快乐马）参考媒体生成视频接口。该模型走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。`r2v` 的参考媒体通过 `metadata.media` 数组传入。",
+      "operationId": "createHappyhorseR2vVideo",
+      "method": "post",
+      "path": "/v1/video/generations",
+      "tags": ["视频（Videos）/Happyhorse 快乐马"],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [583570]
+          }
+        ]
+      },
+      "requestBody": {
+        "type": "application/json",
+        "mediaType": "application/json",
+        "required": true,
+        "jsonSchema": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": ["happyhorse-1.0-r2v"],
+              "description": "模型名称，固定填写 `happyhorse-1.0-r2v`。"
+            },
+            "prompt": {
+              "type": "string",
+              "description": "视频生成提示词。"
+            },
+            "seconds": {
+              "type": "string",
+              "description": "视频时长，字符串格式；项目会转换为整数秒。未传时默认按 5 秒处理。"
+            },
+            "duration": {
+              "type": "integer",
+              "description": "视频时长，整数秒。若同时传 `seconds`，优先使用 `seconds`。"
+            },
+            "size": {
+              "type": "string",
+              "description": "分辨率或尺寸。可传 `720P`、`1080P`，或 `1280*720`、`1920*1080` 这类尺寸。Happyhorse 当前不自动补默认分辨率，建议显式传入。"
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Happyhorse 扩展参数。适配器会透传到阿里请求，并额外从 `metadata.media` 读取 r2v 参考媒体。",
+              "properties": {
+                "media": {
+                  "type": "array",
+                  "description": "参考媒体数组，r2v 模型必填。每项会转为上游 `input.media[]`。",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "参考媒体类型，例如 `reference_image`、`reference_video`。"
+                      },
+                      "url": {
+                        "type": "string",
+                        "description": "参考媒体 URL。"
+                      }
+                    },
+                    "required": ["type", "url"],
+                    "x-apifox-orders": ["type", "url"]
+                  }
+                },
+                "input": {
+                  "type": "object",
+                  "description": "可选：直接透传上游 input 参数。",
+                  "properties": {
+                    "negative_prompt": {
+                      "type": "string",
+                      "description": "反向提示词。"
+                    }
+                  }
+                },
+                "parameters": {
+                  "type": "object",
+                  "description": "可选：直接透传上游 parameters 参数。",
+                  "properties": {
+                    "ratio": {
+                      "type": "string",
+                      "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"],
+                      "description": "视频比例。"
+                    },
+                    "resolution": {
+                      "type": "string",
+                      "description": "分辨率，例如 `720P`、`1080P`。"
+                    },
+                    "size": {
+                      "type": "string",
+                      "description": "尺寸，例如 `1280*720`、`1920*1080`。"
+                    },
+                    "duration": {
+                      "type": "integer",
+                      "description": "视频时长。"
+                    },
+                    "prompt_extend": {
+                      "type": "boolean",
+                      "description": "是否开启提示词智能扩写；项目默认开启。"
+                    },
+                    "seed": {
+                      "type": "integer",
+                      "description": "随机种子。"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "ratio",
+                    "resolution",
+                    "size",
+                    "duration",
+                    "prompt_extend",
+                    "seed"
+                  ]
+                }
+              },
+              "required": ["media"],
+              "x-apifox-orders": ["media", "input", "parameters"]
+            }
+          },
+          "required": ["model", "prompt", "metadata"],
+          "x-apifox-orders": [
+            "model",
+            "prompt",
+            "seconds",
+            "duration",
+            "size",
+            "metadata"
+          ]
+        }
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功创建视频生成任务。",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "公开任务 ID。"
+              },
+              "task_id": {
+                "type": "string",
+                "description": "兼容字段，公开任务 ID。"
+              },
+              "object": {
+                "type": "string",
+                "description": "对象类型，通常为 `video`。"
+              },
+              "model": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+              },
+              "progress": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "integer"
+              }
+            },
+            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "x-apifox-orders": [
+              "id",
+              "task_id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 900100005,
+      "name": "查询 Happyhorse 快乐马视频任务",
+      "description": "查询 `happyhorse-1.0-r2v`（Happyhorse 快乐马）异步视频任务状态和结果。任务完成后，视频地址位于 `metadata.url`。",
+      "operationId": "getHappyhorseR2vVideo",
+      "method": "get",
+      "path": "/v1/video/generations/{task_id}",
+      "tags": ["视频（Videos）/Happyhorse 快乐马"],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [583570]
+          }
+        ]
+      },
+      "parameters": {
+        "path": [
+          {
+            "name": "task_id",
+            "required": true,
+            "description": "提交任务时返回的公开任务 ID。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功。",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "object": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+              },
+              "progress": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "integer"
+              },
+              "completed_at": {
+                "type": "integer"
+              },
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "任务完成后的视频 URL。"
+                  }
+                },
+                "x-apifox-orders": ["url"]
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "x-apifox-orders": ["code", "message"]
+              }
+            },
+            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "x-apifox-orders": [
+              "id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at",
+              "completed_at",
+              "metadata",
+              "error"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 900100006,
+      "name": "Seedance 视频生成",
+      "description": "豆包 Seedance 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。支持文生视频、图生视频，也可以通过 `metadata.content` 传入视频/音频等多模态参考内容。",
+      "operationId": "createSeedanceVideo",
+      "method": "post",
+      "path": "/v1/video/generations",
+      "tags": ["视频（Videos）/Seedance"],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [583570]
+          }
+        ]
+      },
+      "requestBody": {
+        "type": "application/json",
+        "mediaType": "application/json",
+        "required": true,
+        "jsonSchema": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": [
+                "doubao-seedance-1-0-pro-250528",
+                "doubao-seedance-1-0-lite-t2v",
+                "doubao-seedance-1-0-lite-i2v",
+                "doubao-seedance-1-5-pro-251215",
+                "doubao-seedance-2-0-260128",
+                "doubao-seedance-2-0-fast-260128"
+              ],
+              "description": "Seedance 模型名称。"
+            },
+            "prompt": {
+              "type": "string",
+              "description": "视频生成提示词。项目会把该字段追加为上游 `content` 中的 text 项。"
+            },
+            "image": {
+              "type": "string",
+              "description": "单张图生视频参考图 URL。项目会转换为上游 `content[].image_url.url`。"
+            },
+            "images": {
+              "type": "array",
+              "description": "多张图生视频参考图 URL。项目会逐项转换为上游 `content[].image_url.url`。",
+              "items": {
+                "type": "string"
+              }
+            },
+            "seconds": {
+              "type": "string",
+              "description": "视频时长，字符串格式；项目会转换为上游 `duration`。"
+            },
+            "duration": {
+              "type": "integer",
+              "description": "兼容字段，整数秒。豆包 Seedance 上游请求建议使用 `seconds`，或通过 `metadata.duration` 透传。"
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Seedance 上游扩展参数。适配器会将该对象合并进豆包任务请求。",
+              "properties": {
+                "content": {
+                  "type": "array",
+                  "description": "上游多模态内容数组。项目会移除其中已有的 text 项，并把顶层 `prompt` 作为最终 text 项追加。",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["text", "image_url", "video_url", "audio_url"]
+                      },
+                      "text": {
+                        "type": "string"
+                      },
+                      "image_url": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["url"]
+                      },
+                      "video_url": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["url"]
+                      },
+                      "audio_url": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["url"]
+                      },
+                      "role": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type"],
+                    "x-apifox-orders": [
+                      "type",
+                      "text",
+                      "image_url",
+                      "video_url",
+                      "audio_url",
+                      "role"
+                    ]
+                  }
+                },
+                "resolution": {
+                  "type": "string",
+                  "description": "输出分辨率，例如 `720p`、`1080p`。"
+                },
+                "ratio": {
+                  "type": "string",
+                  "description": "视频比例，例如 `16:9`、`9:16`、`1:1`、`4:3`、`3:4`。"
+                },
+                "duration": {
+                  "type": "integer",
+                  "description": "视频时长。"
+                },
+                "frames": {
+                  "type": "integer",
+                  "description": "帧数。"
+                },
+                "seed": {
+                  "type": "integer",
+                  "description": "随机种子。"
+                },
+                "camera_fixed": {
+                  "type": "boolean",
+                  "description": "是否固定镜头。"
+                },
+                "watermark": {
+                  "type": "boolean",
+                  "description": "是否添加水印。"
+                },
+                "generate_audio": {
+                  "type": "boolean",
+                  "description": "是否生成音频。"
+                },
+                "return_last_frame": {
+                  "type": "boolean",
+                  "description": "是否返回最后一帧。"
+                },
+                "service_tier": {
+                  "type": "string",
+                  "description": "服务档位。"
+                },
+                "callback_url": {
+                  "type": "string",
+                  "description": "上游回调地址。"
+                },
+                "tools": {
+                  "type": "array",
+                  "description": "工具配置，例如 web search。",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "x-apifox-orders": ["type"]
+                  }
+                }
+              },
+              "x-apifox-orders": [
+                "content",
+                "resolution",
+                "ratio",
+                "duration",
+                "frames",
+                "seed",
+                "camera_fixed",
+                "watermark",
+                "generate_audio",
+                "return_last_frame",
+                "service_tier",
+                "callback_url",
+                "tools"
+              ]
+            }
+          },
+          "required": ["model", "prompt"],
+          "x-apifox-orders": [
+            "model",
+            "prompt",
+            "image",
+            "images",
+            "seconds",
+            "duration",
+            "metadata"
+          ]
+        }
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功创建视频生成任务。",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "公开任务 ID。"
+              },
+              "task_id": {
+                "type": "string",
+                "description": "兼容字段，公开任务 ID。"
+              },
+              "object": {
+                "type": "string",
+                "description": "对象类型，通常为 `video`。"
+              },
+              "model": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+              },
+              "progress": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "integer"
+              }
+            },
+            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "x-apifox-orders": [
+              "id",
+              "task_id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 900100007,
+      "name": "查询 Seedance 视频任务",
+      "description": "查询豆包 Seedance 异步视频任务状态和结果。任务完成后，视频地址位于 `metadata.url`。",
+      "operationId": "getSeedanceVideo",
+      "method": "get",
+      "path": "/v1/video/generations/{task_id}",
+      "tags": ["视频（Videos）/Seedance"],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [583570]
+          }
+        ]
+      },
+      "parameters": {
+        "path": [
+          {
+            "name": "task_id",
+            "required": true,
+            "description": "提交任务时返回的公开任务 ID。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功。",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "task_id": {
+                "type": "string"
+              },
+              "object": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+              },
+              "progress": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "integer"
+              },
+              "completed_at": {
+                "type": "integer"
+              },
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "任务完成后的视频 URL。"
+                  }
+                },
+                "x-apifox-orders": ["url"]
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "x-apifox-orders": ["code", "message"]
+              }
+            },
+            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "x-apifox-orders": [
+              "id",
+              "task_id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at",
+              "completed_at",
+              "metadata",
+              "error"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 900100008,
+      "name": "阿里万相 Wan 视频生成",
+      "description": "阿里通义万相 Wan 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。支持文生视频、图生视频；图生视频推荐通过 `input_reference` 传入首帧图，更多上游 `input` 与 `parameters` 参数可通过 `metadata` 透传。",
+      "operationId": "createAliWanVideo",
+      "method": "post",
+      "path": "/v1/video/generations",
+      "tags": ["视频（Videos）/阿里万相 Wan"],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [583570]
+          }
+        ]
+      },
+      "requestBody": {
+        "type": "application/json",
+        "mediaType": "application/json",
+        "required": true,
+        "jsonSchema": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": [
+                "wan2.7-i2v-2026-04-25",
+                "wan2.7-i2v",
+                "wan2.5-i2v-preview",
+                "wan2.2-i2v-flash",
+                "wan2.2-i2v-plus",
+                "wanx2.1-i2v-plus",
+                "wanx2.1-i2v-turbo"
+              ],
+              "description": "阿里万相 Wan 视频模型名称。当前项目适配器支持以上模型。"
+            },
+            "prompt": {
+              "type": "string",
+              "description": "视频生成提示词。"
+            },
+            "input_reference": {
+              "type": "string",
+              "description": "图生视频首帧图 URL 或 Base64；项目会转换为上游 `input.img_url`。"
+            },
+            "seconds": {
+              "type": "string",
+              "description": "视频时长，字符串格式；项目会转换为上游 `parameters.duration`。"
+            },
+            "duration": {
+              "type": "integer",
+              "description": "视频时长，整数秒。若同时传 `seconds`，当前项目优先使用 `duration`。未传时默认 5 秒。"
+            },
+            "size": {
+              "type": "string",
+              "description": "分辨率或尺寸。可传 `480P`、`720P`、`1080P`，或 `1280*720`、`1920*1080` 这类尺寸；带 `*` 时作为上游 `parameters.size`，否则作为 `parameters.resolution`。"
+            },
+            "metadata": {
+              "type": "object",
+              "description": "阿里万相上游扩展参数。适配器会将该对象合并进阿里请求体，支持嵌套 `input` 与 `parameters`。注意项目会强制将 `parameters.watermark` 置为 `false`。",
+              "properties": {
+                "input": {
+                  "type": "object",
+                  "description": "透传上游 input 参数。",
+                  "properties": {
+                    "img_url": {
+                      "type": "string",
+                      "description": "图生视频首帧图 URL 或 Base64。也可使用顶层 `input_reference`。"
+                    },
+                    "first_frame_url": {
+                      "type": "string",
+                      "description": "首尾帧生视频的首帧图片 URL。"
+                    },
+                    "last_frame_url": {
+                      "type": "string",
+                      "description": "首尾帧生视频的尾帧图片 URL。"
+                    },
+                    "negative_prompt": {
+                      "type": "string",
+                      "description": "反向提示词。"
+                    },
+                    "template": {
+                      "type": "string",
+                      "description": "视频特效模板。"
+                    },
+                    "audio_url": {
+                      "type": "string",
+                      "description": "音频 URL，部分模型支持。"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "img_url",
+                    "first_frame_url",
+                    "last_frame_url",
+                    "negative_prompt",
+                    "template",
+                    "audio_url"
+                  ]
+                },
+                "parameters": {
+                  "type": "object",
+                  "description": "透传上游 parameters 参数。",
+                  "properties": {
+                    "resolution": {
+                      "type": "string",
+                      "description": "分辨率，例如 `480P`、`720P`、`1080P`。"
+                    },
+                    "ratio": {
+                      "type": "string",
+                      "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"],
+                      "description": "视频比例。仅允许以上取值；非法值会被项目清空。"
+                    },
+                    "size": {
+                      "type": "string",
+                      "description": "尺寸，例如 `832*480`、`1280*720`、`1920*1080`。"
+                    },
+                    "duration": {
+                      "type": "integer",
+                      "description": "视频时长。"
+                    },
+                    "prompt_extend": {
+                      "type": "boolean",
+                      "description": "是否开启提示词智能改写；项目默认开启。"
+                    },
+                    "audio": {
+                      "type": "boolean",
+                      "description": "是否生成或保留音频，部分模型支持。"
+                    },
+                    "seed": {
+                      "type": "integer",
+                      "description": "随机种子。"
+                    },
+                    "watermark": {
+                      "type": "boolean",
+                      "description": "水印参数。项目最终会强制置为 `false`。"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "resolution",
+                    "ratio",
+                    "size",
+                    "duration",
+                    "prompt_extend",
+                    "audio",
+                    "seed",
+                    "watermark"
+                  ]
+                }
+              },
+              "x-apifox-orders": ["input", "parameters"]
+            }
+          },
+          "required": ["model", "prompt"],
+          "x-apifox-orders": [
+            "model",
+            "prompt",
+            "input_reference",
+            "seconds",
+            "duration",
+            "size",
+            "metadata"
+          ]
+        }
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功创建视频生成任务。",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "公开任务 ID。"
+              },
+              "task_id": {
+                "type": "string",
+                "description": "兼容字段，公开任务 ID。"
+              },
+              "object": {
+                "type": "string",
+                "description": "对象类型，通常为 `video`。"
+              },
+              "model": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+              },
+              "progress": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "integer"
+              }
+            },
+            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "x-apifox-orders": [
+              "id",
+              "task_id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 900100009,
+      "name": "查询阿里万相 Wan 视频任务",
+      "description": "查询阿里通义万相 Wan 异步视频任务状态和结果。任务完成后，视频地址位于 `metadata.url`。",
+      "operationId": "getAliWanVideo",
+      "method": "get",
+      "path": "/v1/video/generations/{task_id}",
+      "tags": ["视频（Videos）/阿里万相 Wan"],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [583570]
+          }
+        ]
+      },
+      "parameters": {
+        "path": [
+          {
+            "name": "task_id",
+            "required": true,
+            "description": "提交任务时返回的公开任务 ID。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功。",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "task_id": {
+                "type": "string"
+              },
+              "object": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+              },
+              "progress": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "integer"
+              },
+              "completed_at": {
+                "type": "integer"
+              },
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "任务完成后的视频 URL。"
+                  }
+                },
+                "x-apifox-orders": ["url"]
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "x-apifox-orders": ["code", "message"]
+              }
+            },
+            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "x-apifox-orders": [
+              "id",
+              "task_id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at",
+              "completed_at",
+              "metadata",
+              "error"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

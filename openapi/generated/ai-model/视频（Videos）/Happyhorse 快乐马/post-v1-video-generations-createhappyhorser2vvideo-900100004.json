@@ -1,0 +1,243 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Happyhorse 快乐马 r2v 视频生成",
+    "version": "1.0.0",
+    "description": "`happyhorse-1.0-r2v`（Happyhorse 快乐马）参考媒体生成视频接口。该模型走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。`r2v` 的参考媒体通过 `metadata.media` 数组传入。"
+  },
+  "tags": [
+    {
+      "name": "视频（Videos）/Happyhorse 快乐马"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/v1/video/generations": {
+      "post": {
+        "tags": [
+          "视频（Videos）/Happyhorse 快乐马"
+        ],
+        "summary": "Happyhorse 快乐马 r2v 视频生成",
+        "description": "`happyhorse-1.0-r2v`（Happyhorse 快乐马）参考媒体生成视频接口。该模型走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。`r2v` 的参考媒体通过 `metadata.media` 数组传入。",
+        "operationId": "createhappyhorser2vvideo",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "enum": [
+                      "happyhorse-1.0-r2v"
+                    ],
+                    "description": "模型名称，固定填写 `happyhorse-1.0-r2v`。"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "视频生成提示词。"
+                  },
+                  "seconds": {
+                    "type": "string",
+                    "description": "视频时长，字符串格式；项目会转换为整数秒。未传时默认按 5 秒处理。"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "视频时长，整数秒。若同时传 `seconds`，优先使用 `seconds`。"
+                  },
+                  "size": {
+                    "type": "string",
+                    "description": "分辨率或尺寸。可传 `720P`、`1080P`，或 `1280*720`、`1920*1080` 这类尺寸。Happyhorse 当前不自动补默认分辨率，建议显式传入。"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "description": "Happyhorse 扩展参数。适配器会透传到阿里请求，并额外从 `metadata.media` 读取 r2v 参考媒体。",
+                    "properties": {
+                      "media": {
+                        "type": "array",
+                        "description": "参考媒体数组，r2v 模型必填。每项会转为上游 `input.media[]`。",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "参考媒体类型，例如 `reference_image`、`reference_video`。"
+                            },
+                            "url": {
+                              "type": "string",
+                              "description": "参考媒体 URL。"
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "url"
+                          ],
+                          "x-apifox-orders": [
+                            "type",
+                            "url"
+                          ]
+                        }
+                      },
+                      "input": {
+                        "type": "object",
+                        "description": "可选：直接透传上游 input 参数。",
+                        "properties": {
+                          "negative_prompt": {
+                            "type": "string",
+                            "description": "反向提示词。"
+                          }
+                        }
+                      },
+                      "parameters": {
+                        "type": "object",
+                        "description": "可选：直接透传上游 parameters 参数。",
+                        "properties": {
+                          "ratio": {
+                            "type": "string",
+                            "enum": [
+                              "16:9",
+                              "9:16",
+                              "1:1",
+                              "4:3",
+                              "3:4"
+                            ],
+                            "description": "视频比例。"
+                          },
+                          "resolution": {
+                            "type": "string",
+                            "description": "分辨率，例如 `720P`、`1080P`。"
+                          },
+                          "size": {
+                            "type": "string",
+                            "description": "尺寸，例如 `1280*720`、`1920*1080`。"
+                          },
+                          "duration": {
+                            "type": "integer",
+                            "description": "视频时长。"
+                          },
+                          "prompt_extend": {
+                            "type": "boolean",
+                            "description": "是否开启提示词智能扩写；项目默认开启。"
+                          },
+                          "seed": {
+                            "type": "integer",
+                            "description": "随机种子。"
+                          }
+                        },
+                        "x-apifox-orders": [
+                          "ratio",
+                          "resolution",
+                          "size",
+                          "duration",
+                          "prompt_extend",
+                          "seed"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "media"
+                    ],
+                    "x-apifox-orders": [
+                      "media",
+                      "input",
+                      "parameters"
+                    ]
+                  }
+                },
+                "required": [
+                  "model",
+                  "prompt",
+                  "metadata"
+                ],
+                "x-apifox-orders": [
+                  "model",
+                  "prompt",
+                  "seconds",
+                  "duration",
+                  "size",
+                  "metadata"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功创建视频生成任务。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "公开任务 ID。"
+                    },
+                    "task_id": {
+                      "type": "string",
+                      "description": "兼容字段，公开任务 ID。"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "对象类型，通常为 `video`。"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "queued",
+                        "in_progress",
+                        "completed",
+                        "failed",
+                        "unknown"
+                      ]
+                    },
+                    "progress": {
+                      "type": "integer"
+                    },
+                    "created_at": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object",
+                    "model",
+                    "status",
+                    "progress",
+                    "created_at"
+                  ],
+                  "x-apifox-orders": [
+                    "id",
+                    "task_id",
+                    "object",
+                    "model",
+                    "status",
+                    "progress",
+                    "created_at"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

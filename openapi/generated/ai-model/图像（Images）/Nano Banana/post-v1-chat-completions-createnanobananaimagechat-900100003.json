@@ -1,0 +1,281 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Nano Banana 图片生成（OpenAI 聊天格式）",
+    "version": "1.0.0",
+    "description": "使用 OpenAI Chat Completions 兼容格式调用 `gemini-2.5-flash-image`（Nano Banana）。项目会转换为 Gemini 请求；图片配置通过 `extra_body.google.image_config` 传入，字段必须使用 snake_case。"
+  },
+  "tags": [
+    {
+      "name": "图像（Images）/Nano Banana"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "tags": [
+          "图像（Images）/Nano Banana"
+        ],
+        "summary": "Nano Banana 图片生成（OpenAI 聊天格式）",
+        "description": "使用 OpenAI Chat Completions 兼容格式调用 `gemini-2.5-flash-image`（Nano Banana）。项目会转换为 Gemini 请求；图片配置通过 `extra_body.google.image_config` 传入，字段必须使用 snake_case。",
+        "operationId": "createnanobananaimagechat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "enum": [
+                      "gemini-2.5-flash-image"
+                    ],
+                    "description": "模型名称。"
+                  },
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI 聊天消息。图片会以 Markdown data URI 形式返回到 `message.content` 中。",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "system",
+                            "developer",
+                            "user",
+                            "assistant",
+                            "tool"
+                          ]
+                        },
+                        "content": {
+                          "description": "文本内容，或包含 `text`、`image_url` 等片段的数组。",
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "text",
+                                      "image_url"
+                                    ]
+                                  },
+                                  "text": {
+                                    "type": "string"
+                                  },
+                                  "image_url": {
+                                    "oneOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "url": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "url"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "type"
+                                ],
+                                "x-apifox-orders": [
+                                  "type",
+                                  "text",
+                                  "image_url"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ],
+                      "x-apifox-orders": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "stream": {
+                    "type": "boolean",
+                    "description": "是否流式返回。"
+                  },
+                  "extra_body": {
+                    "type": "object",
+                    "properties": {
+                      "google": {
+                        "type": "object",
+                        "properties": {
+                          "image_config": {
+                            "type": "object",
+                            "description": "Gemini 图片参数。注意必须使用 `image_config`、`aspect_ratio`、`image_size`，不要使用 camelCase。",
+                            "properties": {
+                              "aspect_ratio": {
+                                "type": "string",
+                                "description": "图片比例，例如 `1:1`、`16:9`、`9:16`、`4:3`、`3:4`。"
+                              },
+                              "image_size": {
+                                "type": "string",
+                                "description": "图片尺寸档位，例如 `1K`、`2K`、`4K`。"
+                              }
+                            },
+                            "x-apifox-orders": [
+                              "aspect_ratio",
+                              "image_size"
+                            ]
+                          },
+                          "thinking_config": {
+                            "type": "object",
+                            "properties": {
+                              "include_thoughts": {
+                                "type": "boolean"
+                              },
+                              "thinking_budget": {
+                                "type": "integer"
+                              }
+                            },
+                            "x-apifox-orders": [
+                              "include_thoughts",
+                              "thinking_budget"
+                            ]
+                          }
+                        },
+                        "x-apifox-orders": [
+                          "image_config",
+                          "thinking_config"
+                        ]
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "google"
+                    ]
+                  }
+                },
+                "required": [
+                  "model",
+                  "messages"
+                ],
+                "x-apifox-orders": [
+                  "model",
+                  "messages",
+                  "stream",
+                  "extra_body"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功。非流式响应兼容 OpenAI Chat Completions，图片通常以 Markdown data URI 形式出现在 `choices[].message.content`。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string"
+                    },
+                    "created": {
+                      "type": "integer"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "index": {
+                            "type": "integer"
+                          },
+                          "message": {
+                            "type": "object",
+                            "properties": {
+                              "role": {
+                                "type": "string"
+                              },
+                              "content": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "finish_reason": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "usage": {
+                      "type": "object",
+                      "properties": {
+                        "prompt_tokens": {
+                          "type": "integer"
+                        },
+                        "completion_tokens": {
+                          "type": "integer"
+                        },
+                        "total_tokens": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object",
+                    "created",
+                    "model",
+                    "choices"
+                  ],
+                  "x-apifox-orders": [
+                    "id",
+                    "object",
+                    "created",
+                    "model",
+                    "choices",
+                    "usage"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
