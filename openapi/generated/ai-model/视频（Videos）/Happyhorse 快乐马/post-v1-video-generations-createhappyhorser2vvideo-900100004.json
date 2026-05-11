@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Happyhorse 快乐马 r2v 视频生成",
+    "title": "Happyhorse 快乐马视频生成",
     "version": "1.0.0",
-    "description": "`happyhorse-1.0-r2v`（Happyhorse 快乐马）参考媒体生成视频接口。该模型走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。`r2v` 的参考媒体通过 `metadata.media` 数组传入。"
+    "description": "`happyhorse-1.0-t2v-1080P`、`happyhorse-1.0-t2v-720P`、`happyhorse-1.0-r2v-1080P`、`happyhorse-1.0-r2v-720P` 是 Happyhorse 快乐马可选模型。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。`r2v` 模型需要通过 `metadata.media` 传入参考媒体，`t2v` 模型可不传。"
   },
   "tags": [
     {
@@ -24,8 +24,8 @@
         "tags": [
           "视频（Videos）/Happyhorse 快乐马"
         ],
-        "summary": "Happyhorse 快乐马 r2v 视频生成",
-        "description": "`happyhorse-1.0-r2v`（Happyhorse 快乐马）参考媒体生成视频接口。该模型走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。`r2v` 的参考媒体通过 `metadata.media` 数组传入。",
+        "summary": "Happyhorse 快乐马视频生成",
+        "description": "`happyhorse-1.0-t2v-1080P`、`happyhorse-1.0-t2v-720P`、`happyhorse-1.0-r2v-1080P`、`happyhorse-1.0-r2v-720P` 是 Happyhorse 快乐马可选模型。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。`r2v` 模型需要通过 `metadata.media` 传入参考媒体，`t2v` 模型可不传。",
         "operationId": "createhappyhorser2vvideo",
         "parameters": [],
         "requestBody": {
@@ -38,9 +38,12 @@
                   "model": {
                     "type": "string",
                     "enum": [
-                      "happyhorse-1.0-r2v"
+                      "happyhorse-1.0-t2v-1080P",
+                      "happyhorse-1.0-t2v-720P",
+                      "happyhorse-1.0-r2v-1080P",
+                      "happyhorse-1.0-r2v-720P"
                     ],
-                    "description": "模型名称，固定填写 `happyhorse-1.0-r2v`。"
+                    "description": "模型名称，支持 `happyhorse-1.0-t2v-1080P`、`happyhorse-1.0-t2v-720P`、`happyhorse-1.0-r2v-1080P`、`happyhorse-1.0-r2v-720P`。"
                   },
                   "prompt": {
                     "type": "string",
@@ -60,11 +63,11 @@
                   },
                   "metadata": {
                     "type": "object",
-                    "description": "Happyhorse 扩展参数。适配器会透传到阿里请求，并额外从 `metadata.media` 读取 r2v 参考媒体。",
+                    "description": "Happyhorse 扩展参数。适配器会透传到阿里请求，并可在 `metadata.media` 中传入 r2v 参考媒体。",
                     "properties": {
                       "media": {
                         "type": "array",
-                        "description": "参考媒体数组，r2v 模型必填。每项会转为上游 `input.media[]`。",
+                        "description": "参考媒体数组。r2v 模型需要传入；每项会转为上游 `input.media[]`。",
                         "items": {
                           "type": "object",
                           "properties": {
@@ -143,9 +146,6 @@
                         ]
                       }
                     },
-                    "required": [
-                      "media"
-                    ],
                     "x-apifox-orders": [
                       "media",
                       "input",
@@ -155,8 +155,7 @@
                 },
                 "required": [
                   "model",
-                  "prompt",
-                  "metadata"
+                  "prompt"
                 ],
                 "x-apifox-orders": [
                   "model",
