@@ -112,6 +112,21 @@
                   "input",
                   "parameters"
                 ]
+              },
+              "example": {
+                "model": "qwen-image-plus",
+                "input": {
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [
+                        {
+                          "text": "??????????????????????"
+                        }
+                      ]
+                    }
+                  ]
+                }
               }
             }
           }

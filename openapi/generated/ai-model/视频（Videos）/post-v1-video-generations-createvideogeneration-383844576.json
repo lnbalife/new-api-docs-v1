@@ -3,7 +3,7 @@
   "info": {
     "title": "创建视频生成任务",
     "version": "1.0.0",
-    "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可通过 GET 接口查询任务状态。\n"
+    "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可通过 GET 接口查询任务状态。\n\n\n## 通用视频任务\n\n该入口承载多数文生视频、图生视频渠道。创建后使用 `GET /v1/video/generations/{task_id}` 查询；通用字段优先使用 `model`、`prompt`、`image`/`images`、`input_reference`、`seconds`、`size`，渠道差异参数放入 `metadata`。\n\n| 渠道 | 模型 |\n| --- | --- |\n| Sora OpenAI | `sora-2`、`sora-2-pro` |\n| Seedance | `doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-lite-t2v`、`doubao-seedance-1-0-lite-i2v`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128` |\n| Wan / Happyhorse | `wan2.7-i2v-2026-04-25`、`wan2.7-i2v`、`wan2.5-i2v-preview`、`wan2.2-i2v-flash`、`wan2.2-i2v-plus`、`wanx2.1-i2v-plus`、`wanx2.1-i2v-turbo`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v` |\n| Veo | `veo-3.0-generate-001`、`veo-3.0-fast-generate-001`、`veo-3.1-generate-preview`、`veo-3.1-fast-generate-preview` |\n| Hailuo | `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-2.3-Fast`、`MiniMax-Hailuo-02`、`T2V-01`、`T2V-01-Director`、`I2V-01`、`I2V-01-live`、`I2V-01-Director`、`S2V-01` |\n| Vidu | `viduq2`、`viduq1`、`vidu2.0`、`vidu1.5` |\n| 非标可灵 | `kling-v1`、`kling-v1-6`、`kling-v2-master` |\n| 非标即梦 | `jimeng_vgfm_t2v_l20` |\n\n```bash\ncurl \"$BASE_URL/v1/video/generations\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"doubao-seedance-2-0-260128\",\n    \"prompt\": \"手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面\",\n    \"seconds\": \"5\",\n    \"size\": \"1280x720\",\n    \"metadata\": {\"ratio\": \"16:9\", \"resolution\": \"720p\", \"generate_audio\": false}\n  }'\n\ncurl \"$BASE_URL/v1/video/generations/task_xxx\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\"\n```\n\n非标接口保留渠道格式：可灵使用 `/kling/v1/videos/text2video`、`/kling/v1/videos/image2video`；即梦使用 `/jimeng/?Action=...`。Seedance 的 `metadata.content` 可传 `image_url`、`video_url`、`audio_url` 参考内容。"
   },
   "tags": [
     {
@@ -26,7 +26,7 @@
           "视频（Videos）"
         ],
         "summary": "创建视频生成任务",
-        "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可通过 GET 接口查询任务状态。\n",
+        "description": "提交视频生成任务，支持文生视频和图生视频。\n\n返回任务 ID，可通过 GET 接口查询任务状态。\n\n\n## 通用视频任务\n\n该入口承载多数文生视频、图生视频渠道。创建后使用 `GET /v1/video/generations/{task_id}` 查询；通用字段优先使用 `model`、`prompt`、`image`/`images`、`input_reference`、`seconds`、`size`，渠道差异参数放入 `metadata`。\n\n| 渠道 | 模型 |\n| --- | --- |\n| Sora OpenAI | `sora-2`、`sora-2-pro` |\n| Seedance | `doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-lite-t2v`、`doubao-seedance-1-0-lite-i2v`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128` |\n| Wan / Happyhorse | `wan2.7-i2v-2026-04-25`、`wan2.7-i2v`、`wan2.5-i2v-preview`、`wan2.2-i2v-flash`、`wan2.2-i2v-plus`、`wanx2.1-i2v-plus`、`wanx2.1-i2v-turbo`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v` |\n| Veo | `veo-3.0-generate-001`、`veo-3.0-fast-generate-001`、`veo-3.1-generate-preview`、`veo-3.1-fast-generate-preview` |\n| Hailuo | `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-2.3-Fast`、`MiniMax-Hailuo-02`、`T2V-01`、`T2V-01-Director`、`I2V-01`、`I2V-01-live`、`I2V-01-Director`、`S2V-01` |\n| Vidu | `viduq2`、`viduq1`、`vidu2.0`、`vidu1.5` |\n| 非标可灵 | `kling-v1`、`kling-v1-6`、`kling-v2-master` |\n| 非标即梦 | `jimeng_vgfm_t2v_l20` |\n\n```bash\ncurl \"$BASE_URL/v1/video/generations\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"doubao-seedance-2-0-260128\",\n    \"prompt\": \"手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面\",\n    \"seconds\": \"5\",\n    \"size\": \"1280x720\",\n    \"metadata\": {\"ratio\": \"16:9\", \"resolution\": \"720p\", \"generate_audio\": false}\n  }'\n\ncurl \"$BASE_URL/v1/video/generations/task_xxx\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\"\n```\n\n非标接口保留渠道格式：可灵使用 `/kling/v1/videos/text2video`、`/kling/v1/videos/image2video`；即梦使用 `/jimeng/?Action=...`。Seedance 的 `metadata.content` 可传 `image_url`、`video_url`、`audio_url` 参考内容。",
         "operationId": "createvideogeneration",
         "parameters": [],
         "requestBody": {
@@ -136,6 +136,20 @@
                   "user",
                   "metadata"
                 ]
+              },
+              "example": {
+                "model": "kling-v1",
+                "prompt": "宇航员站起身走了",
+                "image": "https://example.com/image.jpg",
+                "duration": 5,
+                "width": 1280,
+                "height": 720,
+                "fps": 30,
+                "seed": 20231234,
+                "n": 1,
+                "response_format": "url",
+                "user": "user-1234",
+                "metadata": {}
               }
             }
           }

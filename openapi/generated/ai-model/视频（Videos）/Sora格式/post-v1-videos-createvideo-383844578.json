@@ -3,7 +3,7 @@
   "info": {
     "title": "创建视频 ",
     "version": "1.0.0",
-    "description": "OpenAI 兼容的视频生成接口。\n\n参考文档: https://platform.openai.com/docs/api-reference/videos/create\n"
+    "description": "OpenAI 兼容的视频生成接口。\n\n参考文档: https://platform.openai.com/docs/api-reference/videos/create\n\n\n## OpenAI 视频调用\n\n该通用入口当前用于 `sora-2`、`sora-2-pro`。创建后使用 `GET /v1/videos/{task_id}` 查询，视频文件代理地址为 `GET /v1/videos/{task_id}/content`。\n\n```bash\ncurl \"$BASE_URL/v1/videos\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"sora-2\",\n    \"prompt\": \"手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面\",\n    \"seconds\": \"5\",\n    \"size\": \"1280x720\"\n  }'\n\ncurl \"$BASE_URL/v1/videos/task_xxx\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\"\n```\n\n也支持表单上传参考输入；参考图使用 `input_reference`。`sora-2` 支持 `720x1280`、`1280x720`，`sora-2-pro` 额外支持 `1792x1024`、`1024x1792`。"
   },
   "tags": [
     {
@@ -26,7 +26,7 @@
           "视频（Videos）/Sora格式"
         ],
         "summary": "创建视频 ",
-        "description": "OpenAI 兼容的视频生成接口。\n\n参考文档: https://platform.openai.com/docs/api-reference/videos/create\n",
+        "description": "OpenAI 兼容的视频生成接口。\n\n参考文档: https://platform.openai.com/docs/api-reference/videos/create\n\n\n## OpenAI 视频调用\n\n该通用入口当前用于 `sora-2`、`sora-2-pro`。创建后使用 `GET /v1/videos/{task_id}` 查询，视频文件代理地址为 `GET /v1/videos/{task_id}/content`。\n\n```bash\ncurl \"$BASE_URL/v1/videos\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"sora-2\",\n    \"prompt\": \"手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面\",\n    \"seconds\": \"5\",\n    \"size\": \"1280x720\"\n  }'\n\ncurl \"$BASE_URL/v1/videos/task_xxx\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\"\n```\n\n也支持表单上传参考输入；参考图使用 `input_reference`。`sora-2` 支持 `720x1280`、`1280x720`，`sora-2-pro` 额外支持 `1792x1024`、`1024x1792`。",
         "operationId": "createvideo",
         "parameters": [],
         "requestBody": {
@@ -136,6 +136,20 @@
                   "user",
                   "metadata"
                 ]
+              },
+              "example": {
+                "model": "kling-v1",
+                "prompt": "宇航员站起身走了",
+                "image": "https://example.com/image.jpg",
+                "duration": 5,
+                "width": 1280,
+                "height": 720,
+                "fps": 30,
+                "seed": 20231234,
+                "n": 1,
+                "response_format": "url",
+                "user": "user-1234",
+                "metadata": {}
               }
             }
           }

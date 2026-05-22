@@ -3,7 +3,7 @@
   "info": {
     "title": "生成图像",
     "version": "1.0.0",
-    "description": "在给定提示的情况下创建图像。[了解更多](https://platform.openai.com/docs/guides/images)。"
+    "description": "在给定提示的情况下创建图像。[了解更多](https://platform.openai.com/docs/guides/images)。\n\n## 快速上手\n\n该通用接口用于 OpenAI 图像模型；项目内的 GPT Image 2、通义同步生图和 Imagen 也复用 `/v1/images/generations`，按对应模型页选择模型扩展参数。\n\n| 类型 | 模型 |\n| --- | --- |\n| OpenAI | `dall-e-2`、`dall-e-3`、`gpt-image-1`、`gpt-image-1-mini`、`gpt-image-1.5`、`chatgpt-image-latest` |\n| GPT Image 2 | `gpt-image-2`、`gpt-image-2-vip`、`gpt-image-2-1k`、`gpt-image-2-2k`、`gpt-image-2-4k` |\n| 通义同步生图 | `z-image`、`z-image-turbo`、`qwen-image`、`wan2.6`、`wan2.7-image`、`wan2.7-image-pro` |\n| Imagen | `imagen-4.0-generate-001`、`imagen-4.0-ultra-generate-001`、`imagen-4.0-fast-generate-001` |\n| Gemini 图片聊天 | `gemini-2.0-flash-exp-image-generation`、`gemini-2.0-flash-exp`、`gemini-2.5-flash-image`、`gemini-3-pro-image-preview`、`gemini-3.1-flash-image-preview` |\n\n```bash\ncurl \"$BASE_URL/v1/images/generations\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"gpt-image-2\",\n    \"prompt\": \"一张红色山地自行车的产品海报，白色背景，清晰棚拍\",\n    \"size\": \"1024x1024\",\n    \"quality\": \"medium\",\n    \"n\": 1,\n    \"response_format\": \"url\"\n  }'\n```\n\n```python\nfrom openai import OpenAI\n\nclient = OpenAI(api_key=\"sk-xxx\", base_url=\"https://nodekey.xinghanyun.cn/v1\")\nimage = client.images.generate(\n    model=\"gpt-image-2\",\n    prompt=\"一张红色山地自行车的产品海报，白色背景，清晰棚拍\",\n    size=\"1024x1024\",\n    quality=\"medium\",\n    n=1,\n)\nprint(image.data[0].url)\n```\n\n图片编辑走 `/v1/images/edits`；通义编辑模型包含 `qwen-image-edit`、`qwen-image-edit-max`、`qwen-image-edit-plus` 及其日期版本。Gemini 图片聊天模型走 `/v1/chat/completions` 或 Gemini 原生 `generateContent`。"
   },
   "tags": [
     {
@@ -25,7 +25,7 @@
           "图像（Images）/原生OpenAI格式"
         ],
         "summary": "生成图像",
-        "description": "在给定提示的情况下创建图像。[了解更多](https://platform.openai.com/docs/guides/images)。",
+        "description": "在给定提示的情况下创建图像。[了解更多](https://platform.openai.com/docs/guides/images)。\n\n## 快速上手\n\n该通用接口用于 OpenAI 图像模型；项目内的 GPT Image 2、通义同步生图和 Imagen 也复用 `/v1/images/generations`，按对应模型页选择模型扩展参数。\n\n| 类型 | 模型 |\n| --- | --- |\n| OpenAI | `dall-e-2`、`dall-e-3`、`gpt-image-1`、`gpt-image-1-mini`、`gpt-image-1.5`、`chatgpt-image-latest` |\n| GPT Image 2 | `gpt-image-2`、`gpt-image-2-vip`、`gpt-image-2-1k`、`gpt-image-2-2k`、`gpt-image-2-4k` |\n| 通义同步生图 | `z-image`、`z-image-turbo`、`qwen-image`、`wan2.6`、`wan2.7-image`、`wan2.7-image-pro` |\n| Imagen | `imagen-4.0-generate-001`、`imagen-4.0-ultra-generate-001`、`imagen-4.0-fast-generate-001` |\n| Gemini 图片聊天 | `gemini-2.0-flash-exp-image-generation`、`gemini-2.0-flash-exp`、`gemini-2.5-flash-image`、`gemini-3-pro-image-preview`、`gemini-3.1-flash-image-preview` |\n\n```bash\ncurl \"$BASE_URL/v1/images/generations\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"gpt-image-2\",\n    \"prompt\": \"一张红色山地自行车的产品海报，白色背景，清晰棚拍\",\n    \"size\": \"1024x1024\",\n    \"quality\": \"medium\",\n    \"n\": 1,\n    \"response_format\": \"url\"\n  }'\n```\n\n```python\nfrom openai import OpenAI\n\nclient = OpenAI(api_key=\"sk-xxx\", base_url=\"https://nodekey.xinghanyun.cn/v1\")\nimage = client.images.generate(\n    model=\"gpt-image-2\",\n    prompt=\"一张红色山地自行车的产品海报，白色背景，清晰棚拍\",\n    size=\"1024x1024\",\n    quality=\"medium\",\n    n=1,\n)\nprint(image.data[0].url)\n```\n\n图片编辑走 `/v1/images/edits`；通义编辑模型包含 `qwen-image-edit`、`qwen-image-edit-max`、`qwen-image-edit-plus` 及其日期版本。Gemini 图片聊天模型走 `/v1/chat/completions` 或 Gemini 原生 `generateContent`。",
         "operationId": "post-v1-images-generations",
         "parameters": [],
         "requestBody": {
@@ -88,6 +88,11 @@
                   "style",
                   "user"
                 ]
+              },
+              "example": {
+                "model": "gpt-4o",
+                "prompt": "把图片中的自行车改成红色，保持背景和构图不变",
+                "n": 1
               }
             }
           }

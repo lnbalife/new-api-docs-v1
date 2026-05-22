@@ -3,7 +3,7 @@
   "info": {
     "title": "查询 Happyhorse 快乐马视频任务",
     "version": "1.0.0",
-    "description": "查询 `happyhorse-1.0-r2v`（Happyhorse 快乐马）异步视频任务状态和结果。任务完成后，视频地址位于 `metadata.url`。"
+    "description": "查询 Happyhorse 快乐马异步视频任务状态和结果。任务完成后，视频地址位于 `metadata.url`。"
   },
   "tags": [
     {
@@ -25,7 +25,7 @@
           "视频（Videos）/Happyhorse 快乐马"
         ],
         "summary": "查询 Happyhorse 快乐马视频任务",
-        "description": "查询 `happyhorse-1.0-r2v`（Happyhorse 快乐马）异步视频任务状态和结果。任务完成后，视频地址位于 `metadata.url`。",
+        "description": "查询 Happyhorse 快乐马异步视频任务状态和结果。任务完成后，视频地址位于 `metadata.url`。",
         "operationId": "gethappyhorser2vvideo",
         "parameters": [
           {
@@ -33,6 +33,7 @@
             "in": "path",
             "required": true,
             "description": "提交任务时返回的公开任务 ID。",
+            "example": "task_xxx",
             "schema": {
               "type": "string"
             }

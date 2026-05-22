@@ -34,6 +34,7 @@
             "in": "path",
             "required": true,
             "description": "模型名称",
+            "example": "gpt-4o",
             "schema": {
               "type": "string"
             }
@@ -138,6 +139,29 @@
                   "contents",
                   "generationConfig"
                 ]
+              },
+              "example": {
+                "contents": [
+                  {
+                    "parts": [
+                      {
+                        "text": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+                      }
+                    ]
+                  }
+                ],
+                "generationConfig": {
+                  "thinkingConfig": {
+                    "includeThoughts": false
+                  },
+                  "responseModalities": [
+                    "示例值"
+                  ],
+                  "imageConfig": {
+                    "aspectRatio": "示例值",
+                    "imageSize": "https://example.com/image.jpg"
+                  }
+                }
               }
             }
           }

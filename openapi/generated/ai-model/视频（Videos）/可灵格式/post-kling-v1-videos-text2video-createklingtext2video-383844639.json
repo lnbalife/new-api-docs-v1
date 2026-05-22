@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 文生视频",
     "version": "1.0.0",
-    "description": "使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等\n"
+    "description": "使用 Kling 可灵格式从文本描述生成视频。\n\n```bash\ncurl \"$BASE_URL/kling/v1/videos/text2video\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model_name\": \"kling-v1\",\n    \"prompt\": \"清晨山路上的骑行者缓慢经过镜头\",\n    \"aspect_ratio\": \"16:9\",\n    \"duration\": \"5\",\n    \"mode\": \"std\"\n  }'\n```\n\n查询任务使用 `GET /kling/v1/videos/text2video/{task_id}`。"
   },
   "tags": [
     {
@@ -26,116 +26,183 @@
           "视频（Videos）/可灵格式"
         ],
         "summary": "Kling 文生视频",
-        "description": "使用 Kling 模型从文本描述生成视频。\n\n支持的模型：kling-v1, kling-v1-5 等\n",
+        "description": "使用 Kling 可灵格式从文本描述生成视频。\n\n```bash\ncurl \"$BASE_URL/kling/v1/videos/text2video\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model_name\": \"kling-v1\",\n    \"prompt\": \"清晨山路上的骑行者缓慢经过镜头\",\n    \"aspect_ratio\": \"16:9\",\n    \"duration\": \"5\",\n    \"mode\": \"std\"\n  }'\n```\n\n查询任务使用 `GET /kling/v1/videos/text2video/{task_id}`。",
         "operationId": "createklingtext2video",
         "parameters": [],
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "视频生成请求",
+                "description": "Kling 文生视频请求",
+                "required": [
+                  "prompt"
+                ],
                 "properties": {
-                  "model": {
+                  "model_name": {
                     "type": "string",
-                    "description": "模型/风格 ID",
+                    "description": "可灵模型名称；也兼容传入 model",
                     "examples": [
                       "kling-v1"
                     ]
                   },
                   "prompt": {
                     "type": "string",
-                    "description": "文本描述提示词",
+                    "description": "文本提示词",
                     "examples": [
                       "宇航员站起身走了"
                     ]
                   },
-                  "image": {
+                  "negative_prompt": {
                     "type": "string",
-                    "description": "图片输入 (URL 或 Base64)",
+                    "description": "负向提示词",
                     "examples": [
-                      "https://example.com/image.jpg"
+                      "blurry, low quality"
+                    ]
+                  },
+                  "cfg_scale": {
+                    "type": "number",
+                    "description": "提示词相关性",
+                    "examples": [
+                      0.5
+                    ]
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "生成模式",
+                    "examples": [
+                      "std"
+                    ]
+                  },
+                  "camera_control": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "镜头控制类型",
+                        "examples": [
+                          "simple"
+                        ]
+                      },
+                      "config": {
+                        "type": "object",
+                        "properties": {
+                          "horizontal": {
+                            "type": "number",
+                            "examples": [
+                              2.5
+                            ]
+                          },
+                          "vertical": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          },
+                          "pan": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          },
+                          "tilt": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          },
+                          "roll": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          },
+                          "zoom": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          }
+                        },
+                        "x-apifox-orders": [
+                          "horizontal",
+                          "vertical",
+                          "pan",
+                          "tilt",
+                          "roll",
+                          "zoom"
+                        ]
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "type",
+                      "config"
+                    ]
+                  },
+                  "aspect_ratio": {
+                    "type": "string",
+                    "description": "视频画幅比例",
+                    "examples": [
+                      "16:9"
                     ]
                   },
                   "duration": {
-                    "type": "number",
+                    "type": "string",
                     "description": "视频时长（秒）",
                     "examples": [
-                      5
+                      "5"
                     ]
                   },
-                  "width": {
-                    "type": "integer",
-                    "description": "视频宽度",
-                    "examples": [
-                      1280
-                    ]
-                  },
-                  "height": {
-                    "type": "integer",
-                    "description": "视频高度",
-                    "examples": [
-                      720
-                    ]
-                  },
-                  "fps": {
-                    "type": "integer",
-                    "description": "视频帧率",
-                    "examples": [
-                      30
-                    ]
-                  },
-                  "seed": {
-                    "type": "integer",
-                    "description": "随机种子",
-                    "examples": [
-                      20231234
-                    ]
-                  },
-                  "n": {
-                    "type": "integer",
-                    "description": "生成视频数量",
-                    "examples": [
-                      1
-                    ]
-                  },
-                  "response_format": {
+                  "callback_url": {
                     "type": "string",
-                    "description": "响应格式",
+                    "description": "任务回调地址",
                     "examples": [
-                      "url"
+                      "https://your.domain/callback"
                     ]
                   },
-                  "user": {
+                  "external_task_id": {
                     "type": "string",
-                    "description": "用户标识",
+                    "description": "外部任务 ID",
                     "examples": [
-                      "user-1234"
+                      "custom-task-001"
                     ]
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "description": "扩展参数 (如 negative_prompt, style, quality_level 等)",
-                    "additionalProperties": true,
-                    "properties": {},
-                    "x-apifox-orders": []
                   }
                 },
                 "x-apifox-orders": [
-                  "model",
+                  "model_name",
                   "prompt",
-                  "image",
+                  "negative_prompt",
+                  "cfg_scale",
+                  "mode",
+                  "camera_control",
+                  "aspect_ratio",
                   "duration",
-                  "width",
-                  "height",
-                  "fps",
-                  "seed",
-                  "n",
-                  "response_format",
-                  "user",
-                  "metadata"
+                  "callback_url",
+                  "external_task_id"
                 ]
+              },
+              "example": {
+                "model_name": "kling-v1",
+                "prompt": "宇航员站起身走了",
+                "negative_prompt": "blurry, low quality",
+                "cfg_scale": 0.5,
+                "mode": "std",
+                "camera_control": {
+                  "type": "simple",
+                  "config": {
+                    "horizontal": 2.5,
+                    "vertical": 0,
+                    "pan": 0,
+                    "tilt": 0,
+                    "roll": 0,
+                    "zoom": 0
+                  }
+                },
+                "aspect_ratio": "16:9",
+                "duration": "5",
+                "callback_url": "https://your.domain/callback",
+                "external_task_id": "custom-task-001"
               }
             }
           }

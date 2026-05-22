@@ -3,11 +3,18 @@
   "info": {
     "title": "Seedance 视频生成",
     "version": "1.0.0",
-    "description": "豆包 Seedance 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。支持文生视频、图生视频，也可以通过 `metadata.content` 传入视频/音频等多模态参考内容。"
+    "description": "豆包 Seedance 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。常用参数为 `model`、`prompt`、`seconds`、`size`，需要比例、清晰度或音频时放入 `metadata`。"
   },
   "tags": [
     {
       "name": "视频（Videos）/Seedance"
+    }
+  ],
+  "x-codeSamples": [
+    {
+      "lang": "bash",
+      "label": "cURL",
+      "source": "curl \"$BASE_URL/v1/video/generations\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"doubao-seedance-2-0-260128\",\n    \"prompt\": \"手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面\",\n    \"seconds\": \"5\",\n    \"size\": \"1280x720\",\n    \"metadata\": {\n      \"ratio\": \"16:9\",\n      \"resolution\": \"720p\",\n      \"generate_audio\": false\n    }\n  }'"
     }
   ],
   "components": {
@@ -25,7 +32,7 @@
           "视频（Videos）/Seedance"
         ],
         "summary": "Seedance 视频生成",
-        "description": "豆包 Seedance 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。支持文生视频、图生视频，也可以通过 `metadata.content` 传入视频/音频等多模态参考内容。",
+        "description": "豆包 Seedance 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。常用参数为 `model`、`prompt`、`seconds`、`size`，需要比例、清晰度或音频时放入 `metadata`。",
         "operationId": "createseedancevideo",
         "parameters": [],
         "requestBody": {
@@ -231,7 +238,29 @@
                   "seconds",
                   "duration",
                   "metadata"
-                ]
+                ],
+                "example": {
+                  "model": "doubao-seedance-2-0-260128",
+                  "prompt": "手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面",
+                  "seconds": "5",
+                  "size": "1280x720",
+                  "metadata": {
+                    "ratio": "16:9",
+                    "resolution": "720p",
+                    "generate_audio": false
+                  }
+                }
+              },
+              "example": {
+                "model": "doubao-seedance-2-0-260128",
+                "prompt": "手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面",
+                "seconds": "5",
+                "size": "1280x720",
+                "metadata": {
+                  "ratio": "16:9",
+                  "resolution": "720p",
+                  "generate_audio": false
+                }
               }
             }
           }

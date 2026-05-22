@@ -34,6 +34,7 @@
             "in": "path",
             "required": true,
             "description": "模型名称",
+            "example": "gpt-4o",
             "schema": {
               "type": "string"
             }
@@ -135,6 +136,29 @@
                   "contents",
                   "generationConfig"
                 ]
+              },
+              "example": {
+                "contents": [
+                  {
+                    "parts": [
+                      {
+                        "text": "请描述图片中的商品卖点。"
+                      }
+                    ]
+                  }
+                ],
+                "generationConfig": {
+                  "responseModalities": [
+                    "示例值"
+                  ],
+                  "speechConfig": {
+                    "voiceConfig": {
+                      "prebuiltVoiceConfig": {
+                        "voiceName": "example-name"
+                      }
+                    }
+                  }
+                }
               }
             }
           }

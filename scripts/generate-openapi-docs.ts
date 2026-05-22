@@ -74,6 +74,13 @@ function isExcludedAiModelTag(tag: string): boolean {
   return EXCLUDED_AI_MODEL_TAGS.some((ex) => firstPart === ex);
 }
 
+function isModelListOperation(pathName: string, operationId?: string): boolean {
+  return (
+    pathName === '/v1/models' ||
+    operationId === 'listModels'
+  );
+}
+
 function deriveSlugFromTagSegment(
   rawSegment: string,
   overrides: TagSlugOverrides
@@ -222,8 +229,8 @@ async function generate() {
     (process.env.GENERATE_MANAGEMENT_DOCS?.trim().toLowerCase() || 'true') !==
       'false' && (await hasSchemaInputs('management'));
 
-  // Clean old generated docs (all locales) to keep the output absolutely clean
-  const locales = generateManagement ? ['zh', 'en', 'ja'] : ['zh'];
+  // Only Chinese OpenAPI pages are rebuilt here. Preserve translated locales.
+  const locales = ['zh'];
   await Promise.all(
     locales.flatMap((locale) => [
       rm(`./content/docs/${locale}/ai-model`, {
@@ -272,7 +279,12 @@ async function generate() {
         const { displayName } = extracted;
 
         const tag = operation.tags?.[0] || 'default';
-        if (isExcludedAiModelTag(tag)) continue;
+        if (
+          isExcludedAiModelTag(tag) &&
+          !isModelListOperation(op.path, operation.operationId)
+        ) {
+          continue;
+        }
         const { slugPath, metaByDir } = tagToSlugPath(tag, slugOverrides);
         for (const m of metaByDir) aiModelMeta.set(m.dir, m.title);
         const operationId =

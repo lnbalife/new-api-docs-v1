@@ -11,6 +11,9 @@ type HttpEndpoint = {
   id: number;
   name: string;
   description?: string;
+  overrideRemote?: boolean;
+  patchTargetIds?: number[];
+  descriptionAppend?: string;
   operationId?: string;
   method: string;
   path: string;
@@ -24,11 +27,18 @@ type HttpEndpoint = {
       description?: string;
       type?: string; // "file" | "string" | "integer" ...
       schema?: Record<string, unknown>;
+      example?: unknown;
+      examples?: unknown[];
     }>;
     jsonSchema?: Record<string, unknown>;
     mediaType?: string;
     required?: boolean;
     description?: string;
+    examples?: Array<{
+      mediaType?: string;
+      value?: unknown;
+      name?: string;
+    }>;
   };
   parameters?: {
     path?: Array<HttpParameter>;
@@ -44,6 +54,12 @@ type HttpEndpoint = {
     mediaType?: string;
     jsonSchema?: Record<string, unknown>;
     headers?: Array<unknown>;
+  }>;
+  codeSamples?: Array<{
+    lang: string;
+    label?: string;
+    source?: string;
+    id?: string;
   }>;
   auth?: {
     type?: string;
@@ -62,7 +78,11 @@ type HttpParameter = {
   description?: string;
   schema?: Record<string, unknown>;
   type?: string;
+  example?: unknown;
+  examples?: unknown[];
 };
+
+type ExampleContext = 'default' | 'image' | 'image-edit' | 'video';
 
 type SchemaDefItem = {
   id?: string; // "#/definitions/224065305"
@@ -96,13 +116,200 @@ function toOpenApiParam(
   where: 'path' | 'query' | 'header' | 'cookie'
 ) {
   const schema = p.schema ?? (p.type ? { type: p.type } : { type: 'string' });
+  const example =
+    p.example !== undefined
+      ? p.example
+      : inferExampleForParameter(p, where, schema);
   return {
     name: p.name,
     in: where,
     required: where === 'path' ? true : !!p.required,
     description: p.description || undefined,
+    ...(example !== undefined ? { example } : {}),
     schema,
   };
+}
+
+function buildSchemaExample(
+  schema: any,
+  nameHint = 'field',
+  required = false,
+  context: ExampleContext = 'default'
+): unknown {
+  if (!schema || typeof schema !== 'object') return undefined;
+
+  if (schema.example !== undefined) return deepClone(schema.example);
+  if (Array.isArray(schema.examples) && schema.examples.length > 0) {
+    return deepClone(schema.examples[0]);
+  }
+
+  if (nameHint === 'messages') {
+    if (context === 'image' || context === 'image-edit') {
+      return [
+        {
+          role: 'user',
+          content:
+            context === 'image-edit'
+              ? '\u628a\u56fe\u7247\u4e2d\u7684\u81ea\u884c\u8f66\u6539\u6210\u7ea2\u8272\uff0c\u4fdd\u6301\u80cc\u666f\u548c\u6784\u56fe\u4e0d\u53d8'
+              : '\u753b\u4e00\u53ea\u6234\u7740\u8d1d\u96f7\u5e3d\u7684\u5c0f\u732b\uff0c\u767d\u8272\u80cc\u666f\uff0c\u63d2\u753b\u98ce\u683c',
+        },
+      ];
+    }
+
+    return [
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: '请描述图片中的商品卖点。' },
+          {
+            type: 'image_url',
+            image_url: { url: 'https://example.com/product.jpg' },
+          },
+        ],
+      },
+    ];
+  }
+
+  if (nameHint === 'content' && (schema.oneOf || schema.anyOf)) {
+    if (context === 'image' || context === 'image-edit') {
+      return context === 'image-edit'
+        ? '\u628a\u56fe\u7247\u4e2d\u7684\u81ea\u884c\u8f66\u6539\u6210\u7ea2\u8272\uff0c\u4fdd\u6301\u80cc\u666f\u548c\u6784\u56fe\u4e0d\u53d8'
+        : '\u753b\u4e00\u53ea\u6234\u7740\u8d1d\u96f7\u5e3d\u7684\u5c0f\u732b\uff0c\u767d\u8272\u80cc\u666f\uff0c\u63d2\u753b\u98ce\u683c';
+    }
+
+    return [
+      { type: 'text', text: '请描述图片中的商品卖点。' },
+      {
+        type: 'image_url',
+        image_url: { url: 'https://example.com/product.jpg' },
+      },
+    ];
+  }
+
+  const type = String(schema.type || '').toLowerCase();
+
+  if (Array.isArray(schema.enum) && schema.enum.length > 0) {
+    if (nameHint === 'role') return 'user';
+    if (nameHint === 'stream') return false;
+    if (nameHint === 'response_format') return 'url';
+    if (nameHint === 'quality') return 'medium';
+    if (nameHint === 'size') return '1024x1024';
+    if (nameHint === 'duration' || nameHint === 'seconds') return '5';
+    if (nameHint === 'aspect_ratio') return '16:9';
+    if (nameHint === 'mode') return 'std';
+    return deepClone(schema.enum[0]);
+  }
+
+  if (type === 'object' && schema.properties && typeof schema.properties === 'object') {
+    const out: Record<string, unknown> = {};
+    const requiredSet = new Set<string>(
+      Array.isArray(schema.required) ? schema.required : []
+    );
+    for (const [key, value] of Object.entries(schema.properties)) {
+      const child = buildSchemaExample(value, key, requiredSet.has(key), context);
+      if (child !== undefined) out[key] = child;
+    }
+    return out;
+  }
+
+  if (type === 'array' && schema.items && typeof schema.items === 'object') {
+    const item = buildSchemaExample(
+      schema.items,
+      `${nameHint}_item`,
+      required,
+      context
+    );
+    return item === undefined ? [] : [item];
+  }
+
+  if (type === 'integer' || type === 'number') return 1;
+  if (type === 'boolean') return false;
+
+  const name = nameHint.toLowerCase();
+  if (name.includes('anthropic-version')) return '2023-06-01';
+  if (
+    name.includes('api_key') ||
+    name.includes('apikey') ||
+    name.includes('api-key')
+  ) {
+    return 'sk-your-api-key';
+  }
+  if (name === 'key') return 'AIzaSyExampleKey';
+  if (name.includes('callback') || name.includes('webhook')) {
+    return 'https://your.domain/callback';
+  }
+  if (name.includes('task_id') || name === 'id') return 'task_xxx';
+  if (name.includes('model')) return 'gpt-4o';
+  if (name.includes('negative_prompt')) return 'blurry, low quality';
+  if (
+    name.includes('prompt') ||
+    name.includes('text') ||
+    name.includes('message')
+  ) {
+    const contextual = textExampleForContext(context);
+    if (contextual) return contextual;
+    return '请描述图片中的商品卖点。';
+  }
+  if (name.includes('image')) return 'https://example.com/image.jpg';
+  if (name.includes('video')) return 'https://example.com/video.mp4';
+  if (name.includes('audio')) return 'https://example.com/audio.mp3';
+  if (name.includes('name')) return 'example-name';
+  if (name.includes('description')) return '示例描述';
+  if (name.includes('type')) return 'example-type';
+
+  return required ? '示例值' : undefined;
+}
+
+function inferExampleForParameter(
+  p: HttpParameter,
+  where: 'path' | 'query' | 'header' | 'cookie',
+  schema: Record<string, unknown>,
+  context: ExampleContext = 'default'
+): unknown {
+  const name = p.name.toLowerCase();
+  const type = String(schema.type || p.type || 'string').toLowerCase();
+
+  if (Array.isArray(schema.examples) && schema.examples.length > 0) {
+    return schema.examples[0];
+  }
+  if (schema.example !== undefined) return schema.example;
+
+  if (name === 'anthropic-version') return '2023-06-01';
+  if (name === 'x-api-key' || name === 'x-goog-api-key') return 'sk-your-api-key';
+  if (name === 'key') return 'AIzaSyExampleKey';
+  if (name.includes('authorization') || name.includes('bearer')) return 'Bearer sk-your-api-key';
+  if (name.includes('callback') || name.includes('webhook'))
+    return 'https://your.domain/callback';
+  if (name.includes('task_id') || name === 'id') return 'task_xxx';
+  if (name.includes('model')) return 'gpt-4o';
+  if (name.includes('negative_prompt')) return 'blurry, low quality';
+  if (name.includes('prompt') || name.includes('text') || name.includes('message')) {
+    const contextual = textExampleForContext(context);
+    if (contextual) return contextual;
+    return '请描述图片中的商品卖点。';
+  }
+  if (name.includes('image')) return 'https://example.com/image.jpg';
+  if (name.includes('video')) return 'https://example.com/video.mp4';
+  if (name.includes('audio')) return 'https://example.com/audio.mp3';
+  if (name.includes('name')) return 'example-name';
+  if (name.includes('description')) return '示例描述';
+
+  if (type === 'integer' || type === 'number') return 1;
+  if (type === 'boolean') return false;
+  return buildSchemaExample(schema, p.name, false, context);
+}
+
+function textExampleForContext(context: ExampleContext): string | undefined {
+  if (context === 'video') {
+    return '手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面';
+  }
+  if (context === 'image-edit') {
+    return '把图片中的自行车改成红色，保持背景和构图不变';
+  }
+  if (context === 'image') {
+    return '画一只戴着贝雷帽的小猫，白色背景，插画风格';
+  }
+  return undefined;
 }
 
 function extractDefinitionsFromApifoxProject(
@@ -198,6 +405,23 @@ function deepClone<T>(x: T): T {
   return x ? (JSON.parse(JSON.stringify(x)) as T) : x;
 }
 
+function applyLocalEndpointPatch(
+  target: HttpEndpoint,
+  source: HttpEndpoint
+): HttpEndpoint {
+  const description = [target.description, source.descriptionAppend]
+    .filter(Boolean)
+    .join('\n\n');
+
+  return {
+    ...target,
+    ...(description ? { description } : {}),
+    ...(source.requestBody
+      ? { requestBody: { ...target.requestBody, ...source.requestBody } }
+      : {}),
+  };
+}
+
 function resolveSchemaRefs(
   schema: any,
   defs: Map<string, any>,
@@ -247,6 +471,7 @@ function resolveSchemaRefs(
 function buildRequestBody(ep: HttpEndpoint, defs: Map<string, any>) {
   const rb = ep.requestBody;
   if (!rb) return undefined;
+  const context = inferExampleContext(ep);
   const t = rb.type?.toLowerCase();
   if (!t || t === 'none') return undefined;
 
@@ -254,6 +479,7 @@ function buildRequestBody(ep: HttpEndpoint, defs: Map<string, any>) {
     rb.mediaType ||
     (t.includes('/') ? rb.type : undefined) ||
     'application/json';
+  const explicitExample = extractRequestBodyExample(rb, mediaType);
 
   // multipart/form-data etc: build schema from parameters
   if (
@@ -272,9 +498,14 @@ function buildRequestBody(ep: HttpEndpoint, defs: Map<string, any>) {
           : p.type
             ? { type: p.type }
             : { type: 'string' });
+      const example =
+        p.example !== undefined
+          ? p.example
+          : inferExampleForRequestProperty(p.name, propSchema, context);
       properties[p.name] = {
         ...propSchema,
         description: p.description || propSchema.description,
+        ...(example !== undefined ? { example } : {}),
       };
       if (p.required) required.push(p.name);
     }
@@ -295,12 +526,15 @@ function buildRequestBody(ep: HttpEndpoint, defs: Map<string, any>) {
   }
 
   if (rb.jsonSchema && typeof rb.jsonSchema === 'object') {
+    const schema = resolveSchemaRefs(deepClone(rb.jsonSchema), defs);
+    const example = explicitExample ?? buildSchemaExample(schema, 'field', false, context);
     return {
       required: !!rb.required,
       description: rb.description || undefined,
       content: {
         [mediaType]: {
-          schema: resolveSchemaRefs(deepClone(rb.jsonSchema), defs),
+          schema,
+          ...(example !== undefined ? { example } : {}),
         },
       },
     };
@@ -314,6 +548,105 @@ function buildRequestBody(ep: HttpEndpoint, defs: Map<string, any>) {
       },
     },
   };
+}
+
+function extractRequestBodyExample(
+  rb: NonNullable<HttpEndpoint['requestBody']>,
+  mediaType: string
+): unknown {
+  const examples = rb.examples;
+  if (!Array.isArray(examples) || examples.length === 0) return undefined;
+
+  const selected =
+    examples.find((example) => !example.mediaType || example.mediaType === mediaType) ??
+    examples[0];
+  if (!selected || selected.value === undefined) return undefined;
+
+  if (typeof selected.value === 'string') {
+    try {
+      return JSON.parse(selected.value);
+    } catch {
+      return selected.value;
+    }
+  }
+
+  return deepClone(selected.value);
+}
+
+function inferExampleForRequestProperty(
+  name: string,
+  schema: Record<string, unknown>,
+  context: ExampleContext = 'default'
+): unknown {
+  return inferExampleForParameter({ name }, 'query', schema, context);
+}
+
+function inferExampleContext(ep: HttpEndpoint): ExampleContext {
+  const text = [
+    ep.path,
+    ep.name,
+    ep.description,
+    ...(ep.tags ?? []),
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+
+  if (text.includes('video') || text.includes('视频')) return 'video';
+  if (text.includes('edit') || text.includes('编辑') || text.includes('edits')) {
+    return 'image-edit';
+  }
+  if (text.includes('image') || text.includes('图像') || text.includes('图片')) {
+    return 'image';
+  }
+  return 'default';
+}
+
+function injectSchemaExamples(schema: any, requiredHint?: Set<string>): any {
+  if (!schema || typeof schema !== 'object') return schema;
+
+  if (schema.example !== undefined || schema.examples?.length > 0) {
+    return schema;
+  }
+
+  const type = String(schema.type || '').toLowerCase();
+  const enumValues = Array.isArray(schema.enum) ? schema.enum : [];
+  if (enumValues.length > 0) {
+    return { ...schema, example: enumValues[0] };
+  }
+
+  if (type === 'object' && schema.properties && typeof schema.properties === 'object') {
+    const required = new Set<string>(Array.isArray(schema.required) ? schema.required : []);
+    const next = { ...schema, properties: {} as Record<string, any> };
+    for (const [key, value] of Object.entries(schema.properties)) {
+      next.properties[key] = injectSchemaExamples(value, required);
+      if (
+        required.has(key) &&
+        next.properties[key] &&
+        next.properties[key].example === undefined &&
+        (!Array.isArray(next.properties[key].examples) || next.properties[key].examples.length === 0)
+      ) {
+        const example = inferExampleForRequestProperty(key, next.properties[key]);
+        if (example !== undefined) {
+          next.properties[key] = { ...next.properties[key], example };
+        }
+      }
+    }
+    return next;
+  }
+
+  if (type === 'array' && schema.items && typeof schema.items === 'object') {
+    const items = injectSchemaExamples(schema.items);
+    if (items && items.example === undefined && items.examples?.length !== 0) {
+      const example = inferExampleForRequestProperty('item', items);
+      if (example !== undefined) {
+        return { ...schema, items, example: [example] };
+      }
+    }
+    return { ...schema, items };
+  }
+
+  return schema;
 }
 
 function buildResponses(ep: HttpEndpoint, defs: Map<string, any>) {
@@ -370,6 +703,10 @@ const EXCLUDED_AI_MODEL_TAGS = [
 function isExcludedAiModelTag(tag: string): boolean {
   const firstPart = tag.split('/')[0]?.trim() || '';
   return EXCLUDED_AI_MODEL_TAGS.some((ex) => firstPart === ex);
+}
+
+function isModelListEndpoint(ep: HttpEndpoint): boolean {
+  return ep.path === '/v1/models';
 }
 
 async function readHttpSource(): Promise<HttpTxtRoot> {
@@ -545,7 +882,40 @@ async function main() {
     );
   }
   if (!process.env.HTTP_SOURCE_FILE?.trim()) {
-    root.data.push(...(await readLocalHttpSources()));
+    const localEndpoints = await readLocalHttpSources();
+    const patchEndpoints = localEndpoints.filter(
+      (ep) => !ep.overrideRemote && ep.patchTargetIds?.length
+    );
+    const overriddenRemoteKeys = new Set(
+      localEndpoints
+        .filter((ep) => ep.overrideRemote)
+        .map((ep) => `${normalizeMethod(ep.method || 'get')} ${ep.path}`)
+    );
+    root.data = root.data
+      .filter(
+        (ep) =>
+          !overriddenRemoteKeys.has(
+            `${normalizeMethod(ep.method || 'get')} ${ep.path}`
+          )
+      )
+      .map((ep) => {
+        const endpointKey = `${normalizeMethod(ep.method || 'get')} ${ep.path}`;
+        return patchEndpoints
+          .filter(
+            (patch) =>
+              `${normalizeMethod(patch.method || 'get')} ${patch.path}` ===
+                endpointKey && patch.patchTargetIds?.includes(ep.id)
+          )
+          .reduce(
+            (patched, patch) => applyLocalEndpointPatch(patched, patch),
+            ep
+          );
+      });
+    root.data.push(
+      ...localEndpoints.filter(
+        (ep) => ep.overrideRemote || !ep.patchTargetIds?.length
+      )
+    );
   }
 
   let count = 0;
@@ -556,7 +926,13 @@ async function main() {
     const tags = (ep.tags && ep.tags.length > 0 ? ep.tags : ['default']).map(
       (t) => t || 'default'
     );
-    if (group === 'ai-model' && isExcludedAiModelTag(tags[0])) continue;
+    if (
+      group === 'ai-model' &&
+      isExcludedAiModelTag(tags[0]) &&
+      !isModelListEndpoint(ep)
+    ) {
+      continue;
+    }
     const tagPathParts = tags[0].split('/').map(sanitizePathPart);
 
     const method = normalizeMethod(ep.method || 'get');
@@ -578,17 +954,26 @@ async function main() {
 
     const sec = buildSecurity(ep, securitySchemes);
 
-    const doc = {
-      openapi: '3.1.0',
-      info: {
-        title: ep.name || operationId,
-        version: '1.0.0',
-        description: ep.description || undefined,
-      },
-      tags: tags.map((name) => ({ name })),
-      ...(sec.securitySchemes
-        ? { components: { securitySchemes: sec.securitySchemes } }
-        : {}),
+      const doc = {
+        openapi: '3.1.0',
+        info: {
+          title: ep.name || operationId,
+          version: '1.0.0',
+          description: ep.description || undefined,
+        },
+        tags: tags.map((name) => ({ name })),
+        ...(ep.codeSamples?.length
+          ? {
+              'x-codeSamples': ep.codeSamples.map((sample) => ({
+                lang: sample.lang,
+                label: sample.label,
+                source: sample.source || '',
+              })),
+            }
+          : {}),
+        ...(sec.securitySchemes
+          ? { components: { securitySchemes: sec.securitySchemes } }
+          : {}),
       paths: {
         [ep.path]: {
           [method]: {

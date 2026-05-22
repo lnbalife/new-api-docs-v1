@@ -33,6 +33,7 @@
             "in": "path",
             "required": true,
             "description": "模型名称，填写 `gemini-2.5-flash-image`。",
+            "example": "gpt-4o",
             "schema": {
               "type": "string",
               "enum": [
@@ -47,6 +48,22 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "example": {
+                  "contents": [
+                    {
+                      "parts": [
+                        {
+                          "text": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+                        }
+                      ]
+                    }
+                  ],
+                  "generationConfig": {
+                    "responseModalities": [
+                      "IMAGE"
+                    ]
+                  }
+                },
                 "properties": {
                   "contents": {
                     "type": "array",
@@ -202,6 +219,22 @@
                   "generationConfig",
                   "safetySettings"
                 ]
+              },
+              "example": {
+                "contents": [
+                  {
+                    "parts": [
+                      {
+                        "text": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+                      }
+                    ]
+                  }
+                ],
+                "generationConfig": {
+                  "responseModalities": [
+                    "IMAGE"
+                  ]
+                }
               }
             }
           }

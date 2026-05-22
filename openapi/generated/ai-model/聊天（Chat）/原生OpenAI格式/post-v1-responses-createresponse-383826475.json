@@ -138,6 +138,20 @@
                   "previous_response_id",
                   "truncation"
                 ]
+              },
+              "example": {
+                "model": "gpt-4o",
+                "max_output_tokens": 1,
+                "temperature": 1,
+                "top_p": 1,
+                "stream": false,
+                "tools": [
+                  {}
+                ],
+                "reasoning": {
+                  "effort": "low"
+                },
+                "truncation": "auto"
               }
             }
           }

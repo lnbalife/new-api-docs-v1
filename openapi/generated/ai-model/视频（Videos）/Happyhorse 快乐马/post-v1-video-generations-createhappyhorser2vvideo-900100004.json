@@ -165,6 +165,28 @@
                   "size",
                   "metadata"
                 ]
+              },
+              "example": {
+                "model": "happyhorse-1.0-t2v-1080P",
+                "prompt": "手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面",
+                "duration": 1,
+                "metadata": {
+                  "media": [
+                    {
+                      "type": "example-type",
+                      "url": "示例值"
+                    }
+                  ],
+                  "input": {
+                    "negative_prompt": "blurry, low quality"
+                  },
+                  "parameters": {
+                    "ratio": "16:9",
+                    "duration": 1,
+                    "prompt_extend": false,
+                    "seed": 1
+                  }
+                }
               }
             }
           }

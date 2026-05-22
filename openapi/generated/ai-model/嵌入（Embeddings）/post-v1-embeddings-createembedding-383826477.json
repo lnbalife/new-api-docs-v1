@@ -79,6 +79,12 @@
                   "encoding_format",
                   "dimensions"
                 ]
+              },
+              "example": {
+                "model": "text-embedding-ada-002",
+                "input": "示例值",
+                "encoding_format": "float",
+                "dimensions": 1
               }
             }
           }

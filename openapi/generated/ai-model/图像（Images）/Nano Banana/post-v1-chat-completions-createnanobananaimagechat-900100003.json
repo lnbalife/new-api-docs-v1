@@ -3,7 +3,7 @@
   "info": {
     "title": "Nano Banana 图片生成（OpenAI 聊天格式）",
     "version": "1.0.0",
-    "description": "使用 OpenAI Chat Completions 兼容格式调用 `gemini-2.5-flash-image`（Nano Banana）。项目会转换为 Gemini 请求；图片配置通过 `extra_body.google.image_config` 传入，字段必须使用 snake_case。"
+    "description": "使用 OpenAI Chat Completions 兼容格式调用 `gemini-2.5-flash-image`（Nano Banana）。项目会转换为 Gemini 请求；直接传 `model`、`messages`、`stream` 即可。`extra_body.google.image_config` 仅在需要指定图片比例或尺寸时使用，字段必须使用 snake_case。"
   },
   "tags": [
     {
@@ -25,7 +25,7 @@
           "图像（Images）/Nano Banana"
         ],
         "summary": "Nano Banana 图片生成（OpenAI 聊天格式）",
-        "description": "使用 OpenAI Chat Completions 兼容格式调用 `gemini-2.5-flash-image`（Nano Banana）。项目会转换为 Gemini 请求；图片配置通过 `extra_body.google.image_config` 传入，字段必须使用 snake_case。",
+        "description": "使用 OpenAI Chat Completions 兼容格式调用 `gemini-2.5-flash-image`（Nano Banana）。项目会转换为 Gemini 请求；直接传 `model`、`messages`、`stream` 即可。`extra_body.google.image_config` 仅在需要指定图片比例或尺寸时使用，字段必须使用 snake_case。",
         "operationId": "createnanobananaimagechat",
         "parameters": [],
         "requestBody": {
@@ -186,6 +186,27 @@
                   "stream",
                   "extra_body"
                 ]
+              },
+              "example": {
+                "model": "gemini-2.5-flash-image",
+                "messages": [
+                  {
+                    "role": "user",
+                    "content": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+                  }
+                ],
+                "stream": false,
+                "extra_body": {
+                  "google": {
+                    "image_config": {
+                      "image_size": "https://example.com/image.jpg"
+                    },
+                    "thinking_config": {
+                      "include_thoughts": false,
+                      "thinking_budget": 1
+                    }
+                  }
+                }
               }
             }
           }

@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 图生视频",
     "version": "1.0.0",
-    "description": "使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。\n"
+    "description": "使用 Kling 可灵格式从图片生成视频。\n\n```bash\ncurl \"$BASE_URL/kling/v1/videos/image2video\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model_name\": \"kling-v2-master\",\n    \"image\": \"https://example.com/first-frame.jpg\",\n    \"prompt\": \"镜头缓慢推进，人物抬头看向窗外\",\n    \"duration\": \"5\",\n    \"mode\": \"std\"\n  }'\n```\n\n查询任务使用 `GET /kling/v1/videos/image2video/{task_id}`。"
   },
   "tags": [
     {
@@ -26,116 +26,260 @@
           "视频（Videos）/可灵格式"
         ],
         "summary": "Kling 图生视频",
-        "description": "使用 Kling 模型从图片生成视频。\n\n支持通过 image 参数传入图片 URL 或 Base64 编码的图片数据。\n",
+        "description": "使用 Kling 可灵格式从图片生成视频。\n\n```bash\ncurl \"$BASE_URL/kling/v1/videos/image2video\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model_name\": \"kling-v2-master\",\n    \"image\": \"https://example.com/first-frame.jpg\",\n    \"prompt\": \"镜头缓慢推进，人物抬头看向窗外\",\n    \"duration\": \"5\",\n    \"mode\": \"std\"\n  }'\n```\n\n查询任务使用 `GET /kling/v1/videos/image2video/{task_id}`。",
         "operationId": "createklingimage2video",
         "parameters": [],
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "视频生成请求",
+                "description": "Kling 图生视频请求",
+                "required": [
+                  "image"
+                ],
                 "properties": {
-                  "model": {
+                  "model_name": {
                     "type": "string",
-                    "description": "模型/风格 ID",
+                    "description": "可灵模型名称；也兼容传入 model",
                     "examples": [
-                      "kling-v1"
-                    ]
-                  },
-                  "prompt": {
-                    "type": "string",
-                    "description": "文本描述提示词",
-                    "examples": [
-                      "宇航员站起身走了"
+                      "kling-v2-master"
                     ]
                   },
                   "image": {
                     "type": "string",
-                    "description": "图片输入 (URL 或 Base64)",
+                    "description": "首帧图片 URL 或 Base64",
                     "examples": [
                       "https://example.com/image.jpg"
                     ]
                   },
-                  "duration": {
+                  "image_tail": {
+                    "type": "string",
+                    "description": "尾帧图片 URL 或 Base64",
+                    "examples": [
+                      "https://example.com/tail-image.jpg"
+                    ]
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "文本提示词",
+                    "examples": [
+                      "人物转身走开"
+                    ]
+                  },
+                  "negative_prompt": {
+                    "type": "string",
+                    "description": "负向提示词",
+                    "examples": [
+                      "blurry, low quality"
+                    ]
+                  },
+                  "cfg_scale": {
                     "type": "number",
+                    "description": "提示词相关性",
+                    "examples": [
+                      0.5
+                    ]
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "生成模式",
+                    "examples": [
+                      "std"
+                    ]
+                  },
+                  "camera_control": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "镜头控制类型",
+                        "examples": [
+                          "simple"
+                        ]
+                      },
+                      "config": {
+                        "type": "object",
+                        "properties": {
+                          "horizontal": {
+                            "type": "number",
+                            "examples": [
+                              2.5
+                            ]
+                          },
+                          "vertical": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          },
+                          "pan": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          },
+                          "tilt": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          },
+                          "roll": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          },
+                          "zoom": {
+                            "type": "number",
+                            "examples": [
+                              0
+                            ]
+                          }
+                        },
+                        "x-apifox-orders": [
+                          "horizontal",
+                          "vertical",
+                          "pan",
+                          "tilt",
+                          "roll",
+                          "zoom"
+                        ]
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "type",
+                      "config"
+                    ]
+                  },
+                  "static_mask": {
+                    "type": "string",
+                    "description": "静态遮罩图片",
+                    "examples": [
+                      "https://example.com/static-mask.png"
+                    ]
+                  },
+                  "dynamic_masks": {
+                    "type": "array",
+                    "description": "动态遮罩参数",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "mask": {
+                          "type": "string",
+                          "description": "遮罩图片"
+                        },
+                        "trajectories": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "integer"
+                              },
+                              "y": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "y"
+                            ],
+                            "x-apifox-orders": [
+                              "x",
+                              "y"
+                            ]
+                          }
+                        }
+                      },
+                      "x-apifox-orders": [
+                        "mask",
+                        "trajectories"
+                      ]
+                    }
+                  },
+                  "aspect_ratio": {
+                    "type": "string",
+                    "description": "视频画幅比例",
+                    "examples": [
+                      "16:9"
+                    ]
+                  },
+                  "duration": {
+                    "type": "string",
                     "description": "视频时长（秒）",
                     "examples": [
-                      5
+                      "5"
                     ]
                   },
-                  "width": {
-                    "type": "integer",
-                    "description": "视频宽度",
-                    "examples": [
-                      1280
-                    ]
-                  },
-                  "height": {
-                    "type": "integer",
-                    "description": "视频高度",
-                    "examples": [
-                      720
-                    ]
-                  },
-                  "fps": {
-                    "type": "integer",
-                    "description": "视频帧率",
-                    "examples": [
-                      30
-                    ]
-                  },
-                  "seed": {
-                    "type": "integer",
-                    "description": "随机种子",
-                    "examples": [
-                      20231234
-                    ]
-                  },
-                  "n": {
-                    "type": "integer",
-                    "description": "生成视频数量",
-                    "examples": [
-                      1
-                    ]
-                  },
-                  "response_format": {
+                  "callback_url": {
                     "type": "string",
-                    "description": "响应格式",
+                    "description": "任务回调地址",
                     "examples": [
-                      "url"
+                      "https://your.domain/callback"
                     ]
                   },
-                  "user": {
+                  "external_task_id": {
                     "type": "string",
-                    "description": "用户标识",
+                    "description": "外部任务 ID",
                     "examples": [
-                      "user-1234"
+                      "custom-task-002"
                     ]
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "description": "扩展参数 (如 negative_prompt, style, quality_level 等)",
-                    "additionalProperties": true,
-                    "properties": {},
-                    "x-apifox-orders": []
                   }
                 },
                 "x-apifox-orders": [
-                  "model",
-                  "prompt",
+                  "model_name",
                   "image",
+                  "image_tail",
+                  "prompt",
+                  "negative_prompt",
+                  "cfg_scale",
+                  "mode",
+                  "camera_control",
+                  "static_mask",
+                  "dynamic_masks",
+                  "aspect_ratio",
                   "duration",
-                  "width",
-                  "height",
-                  "fps",
-                  "seed",
-                  "n",
-                  "response_format",
-                  "user",
-                  "metadata"
+                  "callback_url",
+                  "external_task_id"
                 ]
+              },
+              "example": {
+                "model_name": "kling-v2-master",
+                "image": "https://example.com/image.jpg",
+                "image_tail": "https://example.com/tail-image.jpg",
+                "prompt": "人物转身走开",
+                "negative_prompt": "blurry, low quality",
+                "cfg_scale": 0.5,
+                "mode": "std",
+                "camera_control": {
+                  "type": "simple",
+                  "config": {
+                    "horizontal": 2.5,
+                    "vertical": 0,
+                    "pan": 0,
+                    "tilt": 0,
+                    "roll": 0,
+                    "zoom": 0
+                  }
+                },
+                "static_mask": "https://example.com/static-mask.png",
+                "dynamic_masks": [
+                  {
+                    "trajectories": [
+                      {
+                        "x": 1,
+                        "y": 1
+                      }
+                    ]
+                  }
+                ],
+                "aspect_ratio": "16:9",
+                "duration": "5",
+                "callback_url": "https://your.domain/callback",
+                "external_task_id": "custom-task-002"
               }
             }
           }

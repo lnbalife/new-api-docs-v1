@@ -41,16 +41,19 @@
                     "format": "binary"
                   },
                   "model": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "gpt-4o"
                   },
                   "prompt": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "请描述图片中的商品卖点。"
                   },
                   "response_format": {
                     "type": "string"
                   },
                   "temperature": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 1
                   }
                 },
                 "required": [

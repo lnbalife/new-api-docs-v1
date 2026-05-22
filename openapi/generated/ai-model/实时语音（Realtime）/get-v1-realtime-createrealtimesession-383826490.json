@@ -34,6 +34,7 @@
             "in": "query",
             "required": false,
             "description": "要使用的模型",
+            "example": "gpt-4o-realtime-preview",
             "schema": {
               "type": "string",
               "examples": [

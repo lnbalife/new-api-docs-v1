@@ -34,6 +34,7 @@
             "in": "path",
             "required": true,
             "description": "模型名称",
+            "example": "gpt-4o",
             "schema": {
               "type": "string"
             }
@@ -175,6 +176,39 @@
                   "tools",
                   "systemInstruction"
                 ]
+              },
+              "example": {
+                "contents": [
+                  {
+                    "role": "user",
+                    "parts": [
+                      {
+                        "text": "请描述图片中的商品卖点。",
+                        "inlineData": {
+                          "mimeType": "example-type"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "generationConfig": {
+                  "temperature": 1,
+                  "topP": 1,
+                  "topK": 1,
+                  "maxOutputTokens": 1,
+                  "stopSequences": []
+                },
+                "safetySettings": [
+                  {}
+                ],
+                "tools": [
+                  {}
+                ],
+                "systemInstruction": {
+                  "parts": [
+                    {}
+                  ]
+                }
               }
             }
           }

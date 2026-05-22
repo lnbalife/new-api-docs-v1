@@ -1,0 +1,247 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "GPT Image 2 图像生成（OpenAI 聊天格式）",
+    "version": "1.0.0",
+    "description": "使用 OpenAI Chat Completions 兼容格式 `/v1/chat/completions` 调用 GPT Image 2 生成图像。直接传 `model`、`messages`、`stream` 即可，默认不需要 `extra_body`。图片通常以 Markdown data URI 形式返回到 `choices[].message.content`。"
+  },
+  "tags": [
+    {
+      "name": "图像（Images）/GPT Image 2"
+    }
+  ],
+  "x-codeSamples": [
+    {
+      "lang": "bash",
+      "label": "cURL",
+      "source": "curl \"$BASE_URL/v1/chat/completions\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"gpt-image-2\",\n    \"messages\": [{\"role\": \"user\", \"content\": \"画一只戴着贝雷帽的小猫，白色背景，插画风格\"}],\n    \"stream\": false\n  }'"
+    },
+    {
+      "lang": "python",
+      "label": "Python",
+      "source": "from openai import OpenAI\n\nclient = OpenAI(api_key=\"sk-xxx\", base_url=\"https://nodekey.xinghanyun.cn/v1\")\nresp = client.chat.completions.create(\n    model=\"gpt-image-2\",\n    messages=[{\"role\": \"user\", \"content\": \"画一只戴着贝雷帽的小猫，白色背景，插画风格\"}],\n    stream=False,\n)\nprint(resp.choices[0].message.content)"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "tags": [
+          "图像（Images）/GPT Image 2"
+        ],
+        "summary": "GPT Image 2 图像生成（OpenAI 聊天格式）",
+        "description": "使用 OpenAI Chat Completions 兼容格式 `/v1/chat/completions` 调用 GPT Image 2 生成图像。直接传 `model`、`messages`、`stream` 即可，默认不需要 `extra_body`。图片通常以 Markdown data URI 形式返回到 `choices[].message.content`。",
+        "operationId": "creategptimage2imagechat",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "model": "gpt-image-2",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+                    }
+                  ],
+                  "stream": false
+                },
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "enum": [
+                      "gpt-image-2",
+                      "gpt-image-2-vip",
+                      "gpt-image-2-1k",
+                      "gpt-image-2-2k",
+                      "gpt-image-2-4k"
+                    ],
+                    "description": "模型名称。支持 `gpt-image-2`、`gpt-image-2-vip`、`gpt-image-2-1k`、`gpt-image-2-2k`、`gpt-image-2-4k`。"
+                  },
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI 聊天消息。使用生图提示词，不要写成图像理解问题。",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "system",
+                            "developer",
+                            "user",
+                            "assistant",
+                            "tool"
+                          ]
+                        },
+                        "content": {
+                          "description": "生图提示词，或包含 `text` 片段的内容数组。",
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "text"
+                                    ]
+                                  },
+                                  "text": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "text"
+                                ],
+                                "x-apifox-orders": [
+                                  "type",
+                                  "text"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ],
+                      "x-apifox-orders": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "stream": {
+                    "type": "boolean",
+                    "description": "是否流式返回。"
+                  }
+                },
+                "required": [
+                  "model",
+                  "messages"
+                ],
+                "x-apifox-orders": [
+                  "model",
+                  "messages",
+                  "stream"
+                ]
+              },
+              "example": {
+                "model": "gpt-image-2",
+                "messages": [
+                  {
+                    "role": "user",
+                    "content": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+                  }
+                ],
+                "stream": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功。非流式响应兼容 OpenAI Chat Completions，图片通常以 Markdown data URI 形式出现在 `choices[].message.content`。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string"
+                    },
+                    "created": {
+                      "type": "integer"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "index": {
+                            "type": "integer"
+                          },
+                          "message": {
+                            "type": "object",
+                            "properties": {
+                              "role": {
+                                "type": "string"
+                              },
+                              "content": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "finish_reason": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "usage": {
+                      "type": "object",
+                      "properties": {
+                        "prompt_tokens": {
+                          "type": "integer"
+                        },
+                        "completion_tokens": {
+                          "type": "integer"
+                        },
+                        "total_tokens": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object",
+                    "created",
+                    "model",
+                    "choices"
+                  ],
+                  "x-apifox-orders": [
+                    "id",
+                    "object",
+                    "created",
+                    "model",
+                    "choices",
+                    "usage"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

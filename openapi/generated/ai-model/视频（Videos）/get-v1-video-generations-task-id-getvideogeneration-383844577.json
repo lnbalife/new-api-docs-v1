@@ -34,6 +34,7 @@
             "in": "path",
             "required": true,
             "description": "任务 ID",
+            "example": "task_xxx",
             "schema": {
               "type": "string"
             }

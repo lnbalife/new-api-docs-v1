@@ -3,7 +3,7 @@
   "info": {
     "title": "ChatCompletions格式",
     "version": "1.0.0",
-    "description": "根据对话历史创建模型响应。支持流式和非流式响应。\n\n兼容 OpenAI Chat Completions API。\n"
+    "description": "根据对话历史创建模型响应。支持流式和非流式响应。\n\n兼容 OpenAI Chat Completions API。\n\n\n## 多模态说明\n\n`messages[].content` 可传内容数组。项目结构支持 `text`、`image_url`、`input_audio`、`file`、`video_url`，实际可用模态取决于所选模型与渠道能力。\n\n```bash\ncurl \"$BASE_URL/v1/chat/completions\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"gpt-4o\",\n    \"messages\": [{\n      \"role\": \"user\",\n      \"content\": [\n        {\"type\": \"text\", \"text\": \"描述这张图里的商品卖点\"},\n        {\"type\": \"image_url\", \"image_url\": {\"url\": \"https://example.com/product.jpg\"}}\n      ]\n    }]\n  }'\n```\n\nGemini 原生多模态调用使用 `/v1beta/models/{model}:generateContent`。Gemini 图片生成模型还可通过本接口的 OpenAI 聊天格式调用。"
   },
   "tags": [
     {
@@ -26,7 +26,7 @@
           "聊天（Chat）/原生OpenAI格式"
         ],
         "summary": "ChatCompletions格式",
-        "description": "根据对话历史创建模型响应。支持流式和非流式响应。\n\n兼容 OpenAI Chat Completions API。\n",
+        "description": "根据对话历史创建模型响应。支持流式和非流式响应。\n\n兼容 OpenAI Chat Completions API。\n\n\n## 多模态说明\n\n`messages[].content` 可传内容数组。项目结构支持 `text`、`image_url`、`input_audio`、`file`、`video_url`，实际可用模态取决于所选模型与渠道能力。\n\n```bash\ncurl \"$BASE_URL/v1/chat/completions\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"gpt-4o\",\n    \"messages\": [{\n      \"role\": \"user\",\n      \"content\": [\n        {\"type\": \"text\", \"text\": \"描述这张图里的商品卖点\"},\n        {\"type\": \"image_url\", \"image_url\": {\"url\": \"https://example.com/product.jpg\"}}\n      ]\n    }]\n  }'\n```\n\nGemini 原生多模态调用使用 `/v1beta/models/{model}:generateContent`。Gemini 图片生成模型还可通过本接口的 OpenAI 聊天格式调用。",
         "operationId": "createchatcompletion",
         "parameters": [],
         "requestBody": {
@@ -476,6 +476,58 @@
                   "modalities",
                   "audio"
                 ]
+              },
+              "example": {
+                "model": "gpt-4",
+                "messages": [
+                  {
+                    "role": "user",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "请描述图片中的商品卖点。"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/product.jpg"
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "temperature": 1,
+                "top_p": 1,
+                "n": 1,
+                "stream": false,
+                "stream_options": {
+                  "include_usage": false
+                },
+                "max_tokens": 1,
+                "max_completion_tokens": 1,
+                "presence_penalty": 1,
+                "frequency_penalty": 1,
+                "logit_bias": {},
+                "tools": [
+                  {
+                    "type": "function",
+                    "function": {
+                      "name": "example-name",
+                      "description": "示例描述",
+                      "parameters": {}
+                    }
+                  }
+                ],
+                "response_format": {
+                  "type": "text",
+                  "json_schema": {}
+                },
+                "seed": 1,
+                "reasoning_effort": "low",
+                "modalities": [
+                  "text"
+                ],
+                "audio": {}
               }
             }
           }

@@ -34,6 +34,7 @@
             "in": "path",
             "required": true,
             "description": "模型/引擎 ID",
+            "example": "gpt-4o",
             "schema": {
               "type": "string"
             }
@@ -89,6 +90,12 @@
                   "encoding_format",
                   "dimensions"
                 ]
+              },
+              "example": {
+                "model": "text-embedding-ada-002",
+                "input": "示例值",
+                "encoding_format": "float",
+                "dimensions": 1
               }
             }
           }

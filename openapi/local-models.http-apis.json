@@ -2,13 +2,16 @@
   "success": true,
   "data": [
     {
-      "id": 900100001,
-      "name": "GPT Image 2 图像生成",
-      "description": "使用 OpenAI 图片接口生成图像。当前项目支持 `gpt-image-2-1k`、`gpt-image-2-2k`、`gpt-image-2-4k` 三个模型变体；未传 `quality` 时默认使用 `medium`，未传 `n` 或传 `0` 时按 `1` 处理。",
-      "operationId": "createGptImage2Image",
-      "method": "post",
-      "path": "/v1/images/generations",
-      "tags": ["图像（Images）/GPT Image 2"],
+      "id": 900100010,
+      "name": "获取模型列表",
+      "description": "获取当前可用的模型列表，返回 OpenAI `/v1/models` 兼容格式。",
+      "operationId": "listModels",
+      "method": "get",
+      "path": "/v1/models",
+      "tags": [
+        "模型（Models）/列出模型"
+      ],
+      "overrideRemote": true,
       "moduleId": 6656265,
       "auth": {
         "type": "securityscheme"
@@ -17,7 +20,96 @@
         "required": true,
         "schemeGroups": [
           {
-            "schemeIds": [583570]
+            "schemeIds": [
+              571886
+            ]
+          }
+        ]
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功获取模型列表",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "object": {
+                "type": "string",
+                "example": "list"
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "gpt-4o"
+                    },
+                    "object": {
+                      "type": "string",
+                      "example": "model"
+                    },
+                    "created": {
+                      "type": "integer",
+                      "example": 1715367049
+                    },
+                    "owned_by": {
+                      "type": "string",
+                      "example": "openai"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "object",
+              "data"
+            ]
+          }
+        }
+      ],
+      "codeSamples": [
+        {
+          "lang": "bash",
+          "label": "cURL",
+          "source": "curl \"$BASE_URL/v1/models\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\""
+        },
+        {
+          "lang": "python",
+          "label": "Python",
+          "source": "from openai import OpenAI\n\nclient = OpenAI(api_key=\"sk-xxx\", base_url=\"https://nodekey.xinghanyun.cn/v1\")\nmodels = client.models.list()\nprint([model.id for model in models.data])"
+        }
+      ]
+    },
+    {
+      "id": 900100001,
+      "name": "GPT Image 2 图像生成（通用格式）",
+      "description": "使用 OpenAI 图片通用接口 `/v1/images/generations` 生成图像。当前项目支持 `gpt-image-2`、`gpt-image-2-vip`、`gpt-image-2-1k`、`gpt-image-2-2k`、`gpt-image-2-4k`。常用参数为 `model`、`prompt`、`size`、`quality`、`n`、`response_format`。",
+      "operationId": "createGptImage2Image",
+      "method": "post",
+      "path": "/v1/images/generations",
+      "tags": [
+        "图像（Images）/GPT Image 2"
+      ],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [
+              583570
+            ]
           }
         ]
       },
@@ -27,15 +119,32 @@
         "required": true,
         "jsonSchema": {
           "type": "object",
+          "example": {
+            "model": "gpt-image-2",
+            "prompt": "一张红色山地自行车的产品海报，白色背景，清晰棚拍",
+            "size": "1024x1024",
+            "quality": "medium",
+            "n": 1,
+            "response_format": "url"
+          },
           "properties": {
             "model": {
               "type": "string",
-              "enum": ["gpt-image-2-1k", "gpt-image-2-2k", "gpt-image-2-4k"],
-              "description": "模型名称。`gpt-image-2-1k` 默认生成 `1024x1024`；`gpt-image-2-2k` 默认生成 `2048x2048`；`gpt-image-2-4k` 默认生成 `3840x2160`。"
+              "enum": [
+                "gpt-image-2",
+                "gpt-image-2-vip",
+                "gpt-image-2-1k",
+                "gpt-image-2-2k",
+                "gpt-image-2-4k"
+              ],
+              "description": "模型名称。`gpt-image-2`、`gpt-image-2-vip` 为可选模型；`gpt-image-2-1k` 默认生成 `1024x1024`；`gpt-image-2-2k` 默认生成 `2048x2048`；`gpt-image-2-4k` 默认生成 `3840x2160`。"
             },
             "prompt": {
               "type": "string",
-              "description": "图像提示词。"
+              "description": "图像生成提示词。",
+              "examples": [
+                "一张红色山地自行车的产品海报，白色背景，清晰棚拍"
+              ]
             },
             "n": {
               "type": "integer",
@@ -53,7 +162,10 @@
             },
             "response_format": {
               "type": "string",
-              "enum": ["url", "b64_json"],
+              "enum": [
+                "url",
+                "b64_json"
+              ],
               "description": "返回图片格式。"
             },
             "background": {
@@ -80,7 +192,10 @@
               "description": "最终用户标识。"
             }
           },
-          "required": ["model", "prompt"],
+          "required": [
+            "model",
+            "prompt"
+          ],
           "x-apifox-orders": [
             "model",
             "prompt",
@@ -125,7 +240,11 @@
                       "type": "string"
                     }
                   },
-                  "x-apifox-orders": ["url", "b64_json", "revised_prompt"]
+                  "x-apifox-orders": [
+                    "url",
+                    "b64_json",
+                    "revised_prompt"
+                  ]
                 }
               },
               "usage": {
@@ -183,9 +302,244 @@
                 ]
               }
             },
-            "required": ["created", "data"],
-            "x-apifox-orders": ["created", "data", "usage"]
+            "required": [
+              "created",
+              "data"
+            ],
+            "x-apifox-orders": [
+              "created",
+              "data",
+              "usage"
+            ]
           }
+        }
+      ],
+      "codeSamples": [
+        {
+          "lang": "bash",
+          "label": "cURL",
+          "source": "curl \"$BASE_URL/v1/images/generations\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"gpt-image-2\",\n    \"prompt\": \"一张红色山地自行车的产品海报，白色背景，清晰棚拍\",\n    \"size\": \"1024x1024\",\n    \"quality\": \"medium\",\n    \"n\": 1,\n    \"response_format\": \"url\"\n  }'"
+        }
+      ]
+    },
+    {
+      "id": 900100012,
+      "name": "GPT Image 2 图像生成（OpenAI 聊天格式）",
+      "description": "使用 OpenAI Chat Completions 兼容格式 `/v1/chat/completions` 调用 GPT Image 2 生成图像。直接传 `model`、`messages`、`stream` 即可，默认不需要 `extra_body`。图片通常以 Markdown data URI 形式返回到 `choices[].message.content`。",
+      "operationId": "createGptImage2ImageChat",
+      "method": "post",
+      "path": "/v1/chat/completions",
+      "tags": [
+        "图像（Images）/GPT Image 2"
+      ],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [
+              583570
+            ]
+          }
+        ]
+      },
+      "requestBody": {
+        "type": "application/json",
+        "mediaType": "application/json",
+        "required": true,
+        "jsonSchema": {
+          "type": "object",
+          "example": {
+            "model": "gpt-image-2",
+            "messages": [
+              {
+                "role": "user",
+                "content": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+              }
+            ],
+            "stream": false
+          },
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": [
+                "gpt-image-2",
+                "gpt-image-2-vip",
+                "gpt-image-2-1k",
+                "gpt-image-2-2k",
+                "gpt-image-2-4k"
+              ],
+              "description": "模型名称。支持 `gpt-image-2`、`gpt-image-2-vip`、`gpt-image-2-1k`、`gpt-image-2-2k`、`gpt-image-2-4k`。"
+            },
+            "messages": {
+              "type": "array",
+              "description": "OpenAI 聊天消息。使用生图提示词，不要写成图像理解问题。",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "system",
+                      "developer",
+                      "user",
+                      "assistant",
+                      "tool"
+                    ]
+                  },
+                  "content": {
+                    "description": "生图提示词，或包含 `text` 片段的内容数组。",
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "text"
+                              ]
+                            },
+                            "text": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "x-apifox-orders": [
+                            "type",
+                            "text"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "role",
+                  "content"
+                ],
+                "x-apifox-orders": [
+                  "role",
+                  "content"
+                ]
+              }
+            },
+            "stream": {
+              "type": "boolean",
+              "description": "是否流式返回。"
+            }
+          },
+          "required": [
+            "model",
+            "messages"
+          ],
+          "x-apifox-orders": [
+            "model",
+            "messages",
+            "stream"
+          ]
+        }
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功。非流式响应兼容 OpenAI Chat Completions，图片通常以 Markdown data URI 形式出现在 `choices[].message.content`。",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "object": {
+                "type": "string"
+              },
+              "created": {
+                "type": "integer"
+              },
+              "model": {
+                "type": "string"
+              },
+              "choices": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string"
+                        },
+                        "content": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "finish_reason": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "usage": {
+                "type": "object",
+                "properties": {
+                  "prompt_tokens": {
+                    "type": "integer"
+                  },
+                  "completion_tokens": {
+                    "type": "integer"
+                  },
+                  "total_tokens": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "required": [
+              "id",
+              "object",
+              "created",
+              "model",
+              "choices"
+            ],
+            "x-apifox-orders": [
+              "id",
+              "object",
+              "created",
+              "model",
+              "choices",
+              "usage"
+            ]
+          }
+        }
+      ],
+      "codeSamples": [
+        {
+          "lang": "bash",
+          "label": "cURL",
+          "source": "curl \"$BASE_URL/v1/chat/completions\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"gpt-image-2\",\n    \"messages\": [{\"role\": \"user\", \"content\": \"画一只戴着贝雷帽的小猫，白色背景，插画风格\"}],\n    \"stream\": false\n  }'"
+        },
+        {
+          "lang": "python",
+          "label": "Python",
+          "source": "from openai import OpenAI\n\nclient = OpenAI(api_key=\"sk-xxx\", base_url=\"https://nodekey.xinghanyun.cn/v1\")\nresp = client.chat.completions.create(\n    model=\"gpt-image-2\",\n    messages=[{\"role\": \"user\", \"content\": \"画一只戴着贝雷帽的小猫，白色背景，插画风格\"}],\n    stream=False,\n)\nprint(resp.choices[0].message.content)"
         }
       ]
     },
@@ -196,7 +550,9 @@
       "operationId": "createNanoBananaImageGemini",
       "method": "post",
       "path": "/v1beta/models/{model}:generateContent",
-      "tags": ["图像（Images）/Nano Banana"],
+      "tags": [
+        "图像（Images）/Nano Banana"
+      ],
       "moduleId": 6656265,
       "auth": {
         "type": "securityscheme"
@@ -205,7 +561,9 @@
         "required": true,
         "schemeGroups": [
           {
-            "schemeIds": [583570]
+            "schemeIds": [
+              583570
+            ]
           }
         ]
       },
@@ -217,7 +575,9 @@
             "description": "模型名称，填写 `gemini-2.5-flash-image`。",
             "schema": {
               "type": "string",
-              "enum": ["gemini-2.5-flash-image"]
+              "enum": [
+                "gemini-2.5-flash-image"
+              ]
             }
           }
         ]
@@ -228,6 +588,22 @@
         "required": true,
         "jsonSchema": {
           "type": "object",
+          "example": {
+            "contents": [
+              {
+                "parts": [
+                  {
+                    "text": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+                  }
+                ]
+              }
+            ],
+            "generationConfig": {
+              "responseModalities": [
+                "IMAGE"
+              ]
+            }
+          },
           "properties": {
             "contents": {
               "type": "array",
@@ -267,7 +643,10 @@
                               "description": "Base64 图片内容，不包含 data URI 前缀。"
                             }
                           },
-                          "required": ["mimeType", "data"]
+                          "required": [
+                            "mimeType",
+                            "data"
+                          ]
                         },
                         "fileData": {
                           "type": "object",
@@ -282,12 +661,21 @@
                           }
                         }
                       },
-                      "x-apifox-orders": ["text", "inlineData", "fileData"]
+                      "x-apifox-orders": [
+                        "text",
+                        "inlineData",
+                        "fileData"
+                      ]
                     }
                   }
                 },
-                "required": ["parts"],
-                "x-apifox-orders": ["role", "parts"]
+                "required": [
+                  "parts"
+                ],
+                "x-apifox-orders": [
+                  "role",
+                  "parts"
+                ]
               }
             },
             "generationConfig": {
@@ -298,7 +686,10 @@
                   "description": "返回模态。图片生成需要包含 `IMAGE`；如需同时返回文本，可传 `TEXT`。",
                   "items": {
                     "type": "string",
-                    "enum": ["TEXT", "IMAGE"]
+                    "enum": [
+                      "TEXT",
+                      "IMAGE"
+                    ]
                   }
                 },
                 "imageConfig": {
@@ -314,7 +705,10 @@
                       "description": "图片尺寸档位，例如 `1K`、`2K`、`4K`。"
                     }
                   },
-                  "x-apifox-orders": ["aspectRatio", "imageSize"]
+                  "x-apifox-orders": [
+                    "aspectRatio",
+                    "imageSize"
+                  ]
                 },
                 "thinkingConfig": {
                   "type": "object",
@@ -326,10 +720,15 @@
                       "type": "integer"
                     }
                   },
-                  "x-apifox-orders": ["includeThoughts", "thinkingBudget"]
+                  "x-apifox-orders": [
+                    "includeThoughts",
+                    "thinkingBudget"
+                  ]
                 }
               },
-              "required": ["responseModalities"],
+              "required": [
+                "responseModalities"
+              ],
               "x-apifox-orders": [
                 "responseModalities",
                 "imageConfig",
@@ -351,8 +750,15 @@
               }
             }
           },
-          "required": ["contents", "generationConfig"],
-          "x-apifox-orders": ["contents", "generationConfig", "safetySettings"]
+          "required": [
+            "contents",
+            "generationConfig"
+          ],
+          "x-apifox-orders": [
+            "contents",
+            "generationConfig",
+            "safetySettings"
+          ]
         }
       },
       "responses": [
@@ -427,7 +833,10 @@
                 }
               }
             },
-            "x-apifox-orders": ["candidates", "usageMetadata"]
+            "x-apifox-orders": [
+              "candidates",
+              "usageMetadata"
+            ]
           }
         }
       ]
@@ -435,11 +844,13 @@
     {
       "id": 900100003,
       "name": "Nano Banana 图片生成（OpenAI 聊天格式）",
-      "description": "使用 OpenAI Chat Completions 兼容格式调用 `gemini-2.5-flash-image`（Nano Banana）。项目会转换为 Gemini 请求；图片配置通过 `extra_body.google.image_config` 传入，字段必须使用 snake_case。",
+      "description": "使用 OpenAI Chat Completions 兼容格式调用 `gemini-2.5-flash-image`（Nano Banana）。项目会转换为 Gemini 请求；直接传 `model`、`messages`、`stream` 即可。`extra_body.google.image_config` 仅在需要指定图片比例或尺寸时使用，字段必须使用 snake_case。",
       "operationId": "createNanoBananaImageChat",
       "method": "post",
       "path": "/v1/chat/completions",
-      "tags": ["图像（Images）/Nano Banana"],
+      "tags": [
+        "图像（Images）/Nano Banana"
+      ],
       "moduleId": 6656265,
       "auth": {
         "type": "securityscheme"
@@ -448,7 +859,9 @@
         "required": true,
         "schemeGroups": [
           {
-            "schemeIds": [583570]
+            "schemeIds": [
+              583570
+            ]
           }
         ]
       },
@@ -461,7 +874,9 @@
           "properties": {
             "model": {
               "type": "string",
-              "enum": ["gemini-2.5-flash-image"],
+              "enum": [
+                "gemini-2.5-flash-image"
+              ],
               "description": "模型名称。"
             },
             "messages": {
@@ -472,7 +887,13 @@
                 "properties": {
                   "role": {
                     "type": "string",
-                    "enum": ["system", "developer", "user", "assistant", "tool"]
+                    "enum": [
+                      "system",
+                      "developer",
+                      "user",
+                      "assistant",
+                      "tool"
+                    ]
                   },
                   "content": {
                     "description": "文本内容，或包含 `text`、`image_url` 等片段的数组。",
@@ -487,7 +908,10 @@
                           "properties": {
                             "type": {
                               "type": "string",
-                              "enum": ["text", "image_url"]
+                              "enum": [
+                                "text",
+                                "image_url"
+                              ]
                             },
                             "text": {
                               "type": "string"
@@ -504,20 +928,34 @@
                                       "type": "string"
                                     }
                                   },
-                                  "required": ["url"]
+                                  "required": [
+                                    "url"
+                                  ]
                                 }
                               ]
                             }
                           },
-                          "required": ["type"],
-                          "x-apifox-orders": ["type", "text", "image_url"]
+                          "required": [
+                            "type"
+                          ],
+                          "x-apifox-orders": [
+                            "type",
+                            "text",
+                            "image_url"
+                          ]
                         }
                       }
                     ]
                   }
                 },
-                "required": ["role", "content"],
-                "x-apifox-orders": ["role", "content"]
+                "required": [
+                  "role",
+                  "content"
+                ],
+                "x-apifox-orders": [
+                  "role",
+                  "content"
+                ]
               }
             },
             "stream": {
@@ -543,7 +981,10 @@
                           "description": "图片尺寸档位，例如 `1K`、`2K`、`4K`。"
                         }
                       },
-                      "x-apifox-orders": ["aspect_ratio", "image_size"]
+                      "x-apifox-orders": [
+                        "aspect_ratio",
+                        "image_size"
+                      ]
                     },
                     "thinking_config": {
                       "type": "object",
@@ -555,17 +996,33 @@
                           "type": "integer"
                         }
                       },
-                      "x-apifox-orders": ["include_thoughts", "thinking_budget"]
+                      "x-apifox-orders": [
+                        "include_thoughts",
+                        "thinking_budget"
+                      ]
                     }
                   },
-                  "x-apifox-orders": ["image_config", "thinking_config"]
+                  "x-apifox-orders": [
+                    "image_config",
+                    "thinking_config"
+                  ]
                 }
               },
-              "x-apifox-orders": ["google"]
+              "x-apifox-orders": [
+                "google"
+              ]
             }
           },
-          "required": ["model", "messages"],
-          "x-apifox-orders": ["model", "messages", "stream", "extra_body"]
+          "required": [
+            "model",
+            "messages"
+          ],
+          "x-apifox-orders": [
+            "model",
+            "messages",
+            "stream",
+            "extra_body"
+          ]
         }
       },
       "responses": [
@@ -630,8 +1087,21 @@
                 }
               }
             },
-            "required": ["id", "object", "created", "model", "choices"],
-            "x-apifox-orders": ["id", "object", "created", "model", "choices", "usage"]
+            "required": [
+              "id",
+              "object",
+              "created",
+              "model",
+              "choices"
+            ],
+            "x-apifox-orders": [
+              "id",
+              "object",
+              "created",
+              "model",
+              "choices",
+              "usage"
+            ]
           }
         }
       ]
@@ -643,7 +1113,9 @@
       "operationId": "createHappyhorseR2vVideo",
       "method": "post",
       "path": "/v1/video/generations",
-      "tags": ["视频（Videos）/Happyhorse 快乐马"],
+      "tags": [
+        "视频（Videos）/Happyhorse 快乐马"
+      ],
       "moduleId": 6656265,
       "auth": {
         "type": "securityscheme"
@@ -652,7 +1124,9 @@
         "required": true,
         "schemeGroups": [
           {
-            "schemeIds": [583570]
+            "schemeIds": [
+              583570
+            ]
           }
         ]
       },
@@ -708,8 +1182,14 @@
                         "description": "参考媒体 URL。"
                       }
                     },
-                    "required": ["type", "url"],
-                    "x-apifox-orders": ["type", "url"]
+                    "required": [
+                      "type",
+                      "url"
+                    ],
+                    "x-apifox-orders": [
+                      "type",
+                      "url"
+                    ]
                   }
                 },
                 "input": {
@@ -728,7 +1208,13 @@
                   "properties": {
                     "ratio": {
                       "type": "string",
-                      "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"],
+                      "enum": [
+                        "16:9",
+                        "9:16",
+                        "1:1",
+                        "4:3",
+                        "3:4"
+                      ],
                       "description": "视频比例。"
                     },
                     "resolution": {
@@ -762,10 +1248,17 @@
                   ]
                 }
               },
-              "x-apifox-orders": ["media", "input", "parameters"]
+              "x-apifox-orders": [
+                "media",
+                "input",
+                "parameters"
+              ]
             }
           },
-          "required": ["model", "prompt"],
+          "required": [
+            "model",
+            "prompt"
+          ],
           "x-apifox-orders": [
             "model",
             "prompt",
@@ -803,7 +1296,13 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+                "enum": [
+                  "queued",
+                  "in_progress",
+                  "completed",
+                  "failed",
+                  "unknown"
+                ]
               },
               "progress": {
                 "type": "integer"
@@ -812,7 +1311,14 @@
                 "type": "integer"
               }
             },
-            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "required": [
+              "id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at"
+            ],
             "x-apifox-orders": [
               "id",
               "task_id",
@@ -833,7 +1339,9 @@
       "operationId": "getHappyhorseR2vVideo",
       "method": "get",
       "path": "/v1/video/generations/{task_id}",
-      "tags": ["视频（Videos）/Happyhorse 快乐马"],
+      "tags": [
+        "视频（Videos）/Happyhorse 快乐马"
+      ],
       "moduleId": 6656265,
       "auth": {
         "type": "securityscheme"
@@ -842,7 +1350,9 @@
         "required": true,
         "schemeGroups": [
           {
-            "schemeIds": [583570]
+            "schemeIds": [
+              583570
+            ]
           }
         ]
       },
@@ -879,7 +1389,13 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+                "enum": [
+                  "queued",
+                  "in_progress",
+                  "completed",
+                  "failed",
+                  "unknown"
+                ]
               },
               "progress": {
                 "type": "integer"
@@ -898,7 +1414,9 @@
                     "description": "任务完成后的视频 URL。"
                   }
                 },
-                "x-apifox-orders": ["url"]
+                "x-apifox-orders": [
+                  "url"
+                ]
               },
               "error": {
                 "type": "object",
@@ -910,10 +1428,20 @@
                     "type": "string"
                   }
                 },
-                "x-apifox-orders": ["code", "message"]
+                "x-apifox-orders": [
+                  "code",
+                  "message"
+                ]
               }
             },
-            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "required": [
+              "id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at"
+            ],
             "x-apifox-orders": [
               "id",
               "object",
@@ -932,11 +1460,13 @@
     {
       "id": 900100006,
       "name": "Seedance 视频生成",
-      "description": "豆包 Seedance 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。支持文生视频、图生视频，也可以通过 `metadata.content` 传入视频/音频等多模态参考内容。",
+      "description": "豆包 Seedance 视频生成接口。该接口走异步视频任务流程，提交后返回任务 ID，再通过查询接口获取状态和结果。常用参数为 `model`、`prompt`、`seconds`、`size`，需要比例、清晰度或音频时放入 `metadata`。",
       "operationId": "createSeedanceVideo",
       "method": "post",
       "path": "/v1/video/generations",
-      "tags": ["视频（Videos）/Seedance"],
+      "tags": [
+        "视频（Videos）/Seedance"
+      ],
       "moduleId": 6656265,
       "auth": {
         "type": "securityscheme"
@@ -945,7 +1475,9 @@
         "required": true,
         "schemeGroups": [
           {
-            "schemeIds": [583570]
+            "schemeIds": [
+              583570
+            ]
           }
         ]
       },
@@ -1003,7 +1535,12 @@
                     "properties": {
                       "type": {
                         "type": "string",
-                        "enum": ["text", "image_url", "video_url", "audio_url"]
+                        "enum": [
+                          "text",
+                          "image_url",
+                          "video_url",
+                          "audio_url"
+                        ]
                       },
                       "text": {
                         "type": "string"
@@ -1015,7 +1552,9 @@
                             "type": "string"
                           }
                         },
-                        "required": ["url"]
+                        "required": [
+                          "url"
+                        ]
                       },
                       "video_url": {
                         "type": "object",
@@ -1024,7 +1563,9 @@
                             "type": "string"
                           }
                         },
-                        "required": ["url"]
+                        "required": [
+                          "url"
+                        ]
                       },
                       "audio_url": {
                         "type": "object",
@@ -1033,13 +1574,17 @@
                             "type": "string"
                           }
                         },
-                        "required": ["url"]
+                        "required": [
+                          "url"
+                        ]
                       },
                       "role": {
                         "type": "string"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "x-apifox-orders": [
                       "type",
                       "text",
@@ -1104,7 +1649,9 @@
                         "type": "string"
                       }
                     },
-                    "x-apifox-orders": ["type"]
+                    "x-apifox-orders": [
+                      "type"
+                    ]
                   }
                 }
               },
@@ -1125,7 +1672,10 @@
               ]
             }
           },
-          "required": ["model", "prompt"],
+          "required": [
+            "model",
+            "prompt"
+          ],
           "x-apifox-orders": [
             "model",
             "prompt",
@@ -1134,7 +1684,18 @@
             "seconds",
             "duration",
             "metadata"
-          ]
+          ],
+          "example": {
+            "model": "doubao-seedance-2-0-260128",
+            "prompt": "手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面",
+            "seconds": "5",
+            "size": "1280x720",
+            "metadata": {
+              "ratio": "16:9",
+              "resolution": "720p",
+              "generate_audio": false
+            }
+          }
         }
       },
       "responses": [
@@ -1164,7 +1725,13 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+                "enum": [
+                  "queued",
+                  "in_progress",
+                  "completed",
+                  "failed",
+                  "unknown"
+                ]
               },
               "progress": {
                 "type": "integer"
@@ -1173,7 +1740,14 @@
                 "type": "integer"
               }
             },
-            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "required": [
+              "id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at"
+            ],
             "x-apifox-orders": [
               "id",
               "task_id",
@@ -1185,6 +1759,13 @@
             ]
           }
         }
+      ],
+      "codeSamples": [
+        {
+          "lang": "bash",
+          "label": "cURL",
+          "source": "curl \"$BASE_URL/v1/video/generations\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"doubao-seedance-2-0-260128\",\n    \"prompt\": \"手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面\",\n    \"seconds\": \"5\",\n    \"size\": \"1280x720\",\n    \"metadata\": {\n      \"ratio\": \"16:9\",\n      \"resolution\": \"720p\",\n      \"generate_audio\": false\n    }\n  }'"
+        }
       ]
     },
     {
@@ -1194,7 +1775,9 @@
       "operationId": "getSeedanceVideo",
       "method": "get",
       "path": "/v1/video/generations/{task_id}",
-      "tags": ["视频（Videos）/Seedance"],
+      "tags": [
+        "视频（Videos）/Seedance"
+      ],
       "moduleId": 6656265,
       "auth": {
         "type": "securityscheme"
@@ -1203,7 +1786,9 @@
         "required": true,
         "schemeGroups": [
           {
-            "schemeIds": [583570]
+            "schemeIds": [
+              583570
+            ]
           }
         ]
       },
@@ -1243,7 +1828,13 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+                "enum": [
+                  "queued",
+                  "in_progress",
+                  "completed",
+                  "failed",
+                  "unknown"
+                ]
               },
               "progress": {
                 "type": "integer"
@@ -1262,7 +1853,9 @@
                     "description": "任务完成后的视频 URL。"
                   }
                 },
-                "x-apifox-orders": ["url"]
+                "x-apifox-orders": [
+                  "url"
+                ]
               },
               "error": {
                 "type": "object",
@@ -1274,10 +1867,20 @@
                     "type": "string"
                   }
                 },
-                "x-apifox-orders": ["code", "message"]
+                "x-apifox-orders": [
+                  "code",
+                  "message"
+                ]
               }
             },
-            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "required": [
+              "id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at"
+            ],
             "x-apifox-orders": [
               "id",
               "task_id",
@@ -1301,7 +1904,9 @@
       "operationId": "createAliWanVideo",
       "method": "post",
       "path": "/v1/video/generations",
-      "tags": ["视频（Videos）/阿里万相 Wan"],
+      "tags": [
+        "视频（Videos）/阿里万相 Wan"
+      ],
       "moduleId": 6656265,
       "auth": {
         "type": "securityscheme"
@@ -1310,7 +1915,9 @@
         "required": true,
         "schemeGroups": [
           {
-            "schemeIds": [583570]
+            "schemeIds": [
+              583570
+            ]
           }
         ]
       },
@@ -1406,7 +2013,13 @@
                     },
                     "ratio": {
                       "type": "string",
-                      "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"],
+                      "enum": [
+                        "16:9",
+                        "9:16",
+                        "1:1",
+                        "4:3",
+                        "3:4"
+                      ],
                       "description": "视频比例。仅允许以上取值；非法值会被项目清空。"
                     },
                     "size": {
@@ -1446,10 +2059,16 @@
                   ]
                 }
               },
-              "x-apifox-orders": ["input", "parameters"]
+              "x-apifox-orders": [
+                "input",
+                "parameters"
+              ]
             }
           },
-          "required": ["model", "prompt"],
+          "required": [
+            "model",
+            "prompt"
+          ],
           "x-apifox-orders": [
             "model",
             "prompt",
@@ -1488,7 +2107,13 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+                "enum": [
+                  "queued",
+                  "in_progress",
+                  "completed",
+                  "failed",
+                  "unknown"
+                ]
               },
               "progress": {
                 "type": "integer"
@@ -1497,7 +2122,14 @@
                 "type": "integer"
               }
             },
-            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "required": [
+              "id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at"
+            ],
             "x-apifox-orders": [
               "id",
               "task_id",
@@ -1518,7 +2150,9 @@
       "operationId": "getAliWanVideo",
       "method": "get",
       "path": "/v1/video/generations/{task_id}",
-      "tags": ["视频（Videos）/阿里万相 Wan"],
+      "tags": [
+        "视频（Videos）/阿里万相 Wan"
+      ],
       "moduleId": 6656265,
       "auth": {
         "type": "securityscheme"
@@ -1527,7 +2161,9 @@
         "required": true,
         "schemeGroups": [
           {
-            "schemeIds": [583570]
+            "schemeIds": [
+              583570
+            ]
           }
         ]
       },
@@ -1567,7 +2203,13 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["queued", "in_progress", "completed", "failed", "unknown"]
+                "enum": [
+                  "queued",
+                  "in_progress",
+                  "completed",
+                  "failed",
+                  "unknown"
+                ]
               },
               "progress": {
                 "type": "integer"
@@ -1586,7 +2228,9 @@
                     "description": "任务完成后的视频 URL。"
                   }
                 },
-                "x-apifox-orders": ["url"]
+                "x-apifox-orders": [
+                  "url"
+                ]
               },
               "error": {
                 "type": "object",
@@ -1598,10 +2242,20 @@
                     "type": "string"
                   }
                 },
-                "x-apifox-orders": ["code", "message"]
+                "x-apifox-orders": [
+                  "code",
+                  "message"
+                ]
               }
             },
-            "required": ["id", "object", "model", "status", "progress", "created_at"],
+            "required": [
+              "id",
+              "object",
+              "model",
+              "status",
+              "progress",
+              "created_at"
+            ],
             "x-apifox-orders": [
               "id",
               "task_id",
@@ -1614,6 +2268,474 @@
               "metadata",
               "error"
             ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 383844639,
+      "name": "Kling 文生视频",
+      "description": "使用 Kling 可灵格式从文本描述生成视频。\n\n```bash\ncurl \"$BASE_URL/kling/v1/videos/text2video\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model_name\": \"kling-v1\",\n    \"prompt\": \"清晨山路上的骑行者缓慢经过镜头\",\n    \"aspect_ratio\": \"16:9\",\n    \"duration\": \"5\",\n    \"mode\": \"std\"\n  }'\n```\n\n查询任务使用 `GET /kling/v1/videos/text2video/{task_id}`。",
+      "overrideRemote": true,
+      "operationId": "createKlingText2Video",
+      "method": "post",
+      "path": "/kling/v1/videos/text2video",
+      "tags": [
+        "视频（Videos）/可灵格式"
+      ],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [
+              571886
+            ]
+          }
+        ]
+      },
+      "requestBody": {
+        "type": "application/json",
+        "mediaType": "application/json",
+        "required": true,
+        "jsonSchema": {
+          "type": "object",
+          "description": "Kling 文生视频请求",
+          "required": [
+            "prompt"
+          ],
+          "properties": {
+            "model_name": {
+              "type": "string",
+              "description": "可灵模型名称；也兼容传入 model",
+              "examples": [
+                "kling-v1"
+              ]
+            },
+            "prompt": {
+              "type": "string",
+              "description": "文本提示词",
+              "examples": [
+                "宇航员站起身走了"
+              ]
+            },
+            "negative_prompt": {
+              "type": "string",
+              "description": "负向提示词",
+              "examples": [
+                "blurry, low quality"
+              ]
+            },
+            "cfg_scale": {
+              "type": "number",
+              "description": "提示词相关性",
+              "examples": [
+                0.5
+              ]
+            },
+            "mode": {
+              "type": "string",
+              "description": "生成模式",
+              "examples": [
+                "std"
+              ]
+            },
+            "camera_control": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "镜头控制类型",
+                  "examples": [
+                    "simple"
+                  ]
+                },
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "horizontal": {
+                      "type": "number",
+                      "examples": [
+                        2.5
+                      ]
+                    },
+                    "vertical": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    },
+                    "pan": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    },
+                    "tilt": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    },
+                    "roll": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    },
+                    "zoom": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "horizontal",
+                    "vertical",
+                    "pan",
+                    "tilt",
+                    "roll",
+                    "zoom"
+                  ]
+                }
+              },
+              "x-apifox-orders": [
+                "type",
+                "config"
+              ]
+            },
+            "aspect_ratio": {
+              "type": "string",
+              "description": "视频画幅比例",
+              "examples": [
+                "16:9"
+              ]
+            },
+            "duration": {
+              "type": "string",
+              "description": "视频时长（秒）",
+              "examples": [
+                "5"
+              ]
+            },
+            "callback_url": {
+              "type": "string",
+              "description": "任务回调地址",
+              "examples": [
+                "https://your.domain/callback"
+              ]
+            },
+            "external_task_id": {
+              "type": "string",
+              "description": "外部任务 ID",
+              "examples": [
+                "custom-task-001"
+              ]
+            }
+          },
+          "x-apifox-orders": [
+            "model_name",
+            "prompt",
+            "negative_prompt",
+            "cfg_scale",
+            "mode",
+            "camera_control",
+            "aspect_ratio",
+            "duration",
+            "callback_url",
+            "external_task_id"
+          ]
+        }
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功创建视频生成任务",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "$ref": "#/definitions/224072267"
+          }
+        },
+        {
+          "code": 400,
+          "name": "请求有误",
+          "description": "请求参数错误",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "$ref": "#/definitions/224065280"
+          }
+        }
+      ]
+    },
+    {
+      "id": 383844641,
+      "name": "Kling 图生视频",
+      "description": "使用 Kling 可灵格式从图片生成视频。\n\n```bash\ncurl \"$BASE_URL/kling/v1/videos/image2video\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model_name\": \"kling-v2-master\",\n    \"image\": \"https://example.com/first-frame.jpg\",\n    \"prompt\": \"镜头缓慢推进，人物抬头看向窗外\",\n    \"duration\": \"5\",\n    \"mode\": \"std\"\n  }'\n```\n\n查询任务使用 `GET /kling/v1/videos/image2video/{task_id}`。",
+      "overrideRemote": true,
+      "operationId": "createKlingImage2Video",
+      "method": "post",
+      "path": "/kling/v1/videos/image2video",
+      "tags": [
+        "视频（Videos）/可灵格式"
+      ],
+      "moduleId": 6656265,
+      "auth": {
+        "type": "securityscheme"
+      },
+      "securityScheme": {
+        "required": true,
+        "schemeGroups": [
+          {
+            "schemeIds": [
+              571886
+            ]
+          }
+        ]
+      },
+      "requestBody": {
+        "type": "application/json",
+        "mediaType": "application/json",
+        "required": true,
+        "jsonSchema": {
+          "type": "object",
+          "description": "Kling 图生视频请求",
+          "required": [
+            "image"
+          ],
+          "properties": {
+            "model_name": {
+              "type": "string",
+              "description": "可灵模型名称；也兼容传入 model",
+              "examples": [
+                "kling-v2-master"
+              ]
+            },
+            "image": {
+              "type": "string",
+              "description": "首帧图片 URL 或 Base64",
+              "examples": [
+                "https://example.com/image.jpg"
+              ]
+            },
+            "image_tail": {
+              "type": "string",
+              "description": "尾帧图片 URL 或 Base64",
+              "examples": [
+                "https://example.com/tail-image.jpg"
+              ]
+            },
+            "prompt": {
+              "type": "string",
+              "description": "文本提示词",
+              "examples": [
+                "人物转身走开"
+              ]
+            },
+            "negative_prompt": {
+              "type": "string",
+              "description": "负向提示词",
+              "examples": [
+                "blurry, low quality"
+              ]
+            },
+            "cfg_scale": {
+              "type": "number",
+              "description": "提示词相关性",
+              "examples": [
+                0.5
+              ]
+            },
+            "mode": {
+              "type": "string",
+              "description": "生成模式",
+              "examples": [
+                "std"
+              ]
+            },
+            "camera_control": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "镜头控制类型",
+                  "examples": [
+                    "simple"
+                  ]
+                },
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "horizontal": {
+                      "type": "number",
+                      "examples": [
+                        2.5
+                      ]
+                    },
+                    "vertical": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    },
+                    "pan": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    },
+                    "tilt": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    },
+                    "roll": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    },
+                    "zoom": {
+                      "type": "number",
+                      "examples": [
+                        0
+                      ]
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "horizontal",
+                    "vertical",
+                    "pan",
+                    "tilt",
+                    "roll",
+                    "zoom"
+                  ]
+                }
+              },
+              "x-apifox-orders": [
+                "type",
+                "config"
+              ]
+            },
+            "static_mask": {
+              "type": "string",
+              "description": "静态遮罩图片",
+              "examples": [
+                "https://example.com/static-mask.png"
+              ]
+            },
+            "dynamic_masks": {
+              "type": "array",
+              "description": "动态遮罩参数",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mask": {
+                    "type": "string",
+                    "description": "遮罩图片"
+                  },
+                  "trajectories": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "x": {
+                          "type": "integer"
+                        },
+                        "y": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "x",
+                        "y"
+                      ],
+                      "x-apifox-orders": [
+                        "x",
+                        "y"
+                      ]
+                    }
+                  }
+                },
+                "x-apifox-orders": [
+                  "mask",
+                  "trajectories"
+                ]
+              }
+            },
+            "aspect_ratio": {
+              "type": "string",
+              "description": "视频画幅比例",
+              "examples": [
+                "16:9"
+              ]
+            },
+            "duration": {
+              "type": "string",
+              "description": "视频时长（秒）",
+              "examples": [
+                "5"
+              ]
+            },
+            "callback_url": {
+              "type": "string",
+              "description": "任务回调地址",
+              "examples": [
+                "https://your.domain/callback"
+              ]
+            },
+            "external_task_id": {
+              "type": "string",
+              "description": "外部任务 ID",
+              "examples": [
+                "custom-task-002"
+              ]
+            }
+          },
+          "x-apifox-orders": [
+            "model_name",
+            "image",
+            "image_tail",
+            "prompt",
+            "negative_prompt",
+            "cfg_scale",
+            "mode",
+            "camera_control",
+            "static_mask",
+            "dynamic_masks",
+            "aspect_ratio",
+            "duration",
+            "callback_url",
+            "external_task_id"
+          ]
+        }
+      },
+      "responses": [
+        {
+          "code": 200,
+          "name": "成功",
+          "description": "成功创建视频生成任务",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "$ref": "#/definitions/224072267"
+          }
+        },
+        {
+          "code": 400,
+          "name": "请求有误",
+          "description": "请求参数错误",
+          "contentType": "json",
+          "mediaType": "application/json",
+          "jsonSchema": {
+            "$ref": "#/definitions/224065280"
           }
         }
       ]

@@ -185,6 +185,25 @@
                   "size",
                   "metadata"
                 ]
+              },
+              "example": {
+                "model": "wan2.7-i2v-2026-04-25",
+                "prompt": "手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面",
+                "duration": 1,
+                "metadata": {
+                  "input": {
+                    "negative_prompt": "blurry, low quality",
+                    "audio_url": "https://example.com/audio.mp3"
+                  },
+                  "parameters": {
+                    "ratio": "16:9",
+                    "duration": 1,
+                    "prompt_extend": false,
+                    "audio": false,
+                    "seed": 1,
+                    "watermark": false
+                  }
+                }
               }
             }
           }

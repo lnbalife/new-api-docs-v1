@@ -34,6 +34,7 @@
             "in": "query",
             "required": true,
             "description": "API 操作类型",
+            "example": "CVSync2AsyncSubmitTask",
             "schema": {
               "type": "string",
               "enum": [
@@ -81,6 +82,10 @@
                   "prompt",
                   "binary_data_base64"
                 ]
+              },
+              "example": {
+                "prompt": "手持镜头穿过清晨的咖啡店，阳光从窗边扫过桌面",
+                "binary_data_base64": []
               }
             }
           }

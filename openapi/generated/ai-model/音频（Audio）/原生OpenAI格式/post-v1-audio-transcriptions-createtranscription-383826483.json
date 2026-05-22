@@ -45,14 +45,16 @@
                     "type": "string",
                     "examples": [
                       "whisper-1"
-                    ]
+                    ],
+                    "example": "whisper-1"
                   },
                   "language": {
                     "type": "string",
                     "description": "ISO-639-1 语言代码"
                   },
                   "prompt": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "请描述图片中的商品卖点。"
                   },
                   "response_format": {
                     "type": "string",
@@ -63,10 +65,12 @@
                       "verbose_json",
                       "vtt"
                     ],
-                    "default": "json"
+                    "default": "json",
+                    "example": "url"
                   },
                   "temperature": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 1
                   },
                   "timestamp_granularities": {
                     "type": "array",
@@ -76,7 +80,10 @@
                         "word",
                         "segment"
                       ]
-                    }
+                    },
+                    "example": [
+                      "word"
+                    ]
                   }
                 },
                 "required": [

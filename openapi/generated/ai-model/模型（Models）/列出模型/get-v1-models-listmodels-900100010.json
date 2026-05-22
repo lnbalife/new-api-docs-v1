@@ -1,0 +1,102 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "获取模型列表",
+    "version": "1.0.0",
+    "description": "获取当前可用的模型列表，返回 OpenAI `/v1/models` 兼容格式。"
+  },
+  "tags": [
+    {
+      "name": "模型（Models）/列出模型"
+    }
+  ],
+  "x-codeSamples": [
+    {
+      "lang": "bash",
+      "label": "cURL",
+      "source": "curl \"$BASE_URL/v1/models\" \\\n  -H \"Authorization: Bearer $NODEKEY_API_KEY\""
+    },
+    {
+      "lang": "python",
+      "label": "Python",
+      "source": "from openai import OpenAI\n\nclient = OpenAI(api_key=\"sk-xxx\", base_url=\"https://nodekey.xinghanyun.cn/v1\")\nmodels = client.models.list()\nprint([model.id for model in models.data])"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "使用 Bearer Token 认证。\n格式: `Authorization: Bearer sk-xxxxxx`\n"
+      }
+    }
+  },
+  "paths": {
+    "/v1/models": {
+      "get": {
+        "tags": [
+          "模型（Models）/列出模型"
+        ],
+        "summary": "获取模型列表",
+        "description": "获取当前可用的模型列表，返回 OpenAI `/v1/models` 兼容格式。",
+        "operationId": "listmodels",
+        "parameters": [],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功获取模型列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "object": {
+                      "type": "string",
+                      "example": "list"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "gpt-4o"
+                          },
+                          "object": {
+                            "type": "string",
+                            "example": "model"
+                          },
+                          "created": {
+                            "type": "integer",
+                            "example": 1715367049
+                          },
+                          "owned_by": {
+                            "type": "string",
+                            "example": "openai"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "object"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "object",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

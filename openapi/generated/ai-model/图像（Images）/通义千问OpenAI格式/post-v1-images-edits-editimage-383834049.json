@@ -120,6 +120,24 @@
                   "input",
                   "parameters"
                 ]
+              },
+              "example": {
+                "model": "qwen-image-edit-plus",
+                "input": {
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [
+                        {
+                          "image": "https://example.com/input.png"
+                        },
+                        {
+                          "text": "??????????????????????"
+                        }
+                      ]
+                    }
+                  ]
+                }
               }
             }
           }

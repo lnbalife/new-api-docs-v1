@@ -144,6 +144,33 @@
                   "extra_body",
                   "contents"
                 ]
+              },
+              "example": {
+                "model": "gpt-4o",
+                "stream": false,
+                "messages": [
+                  {
+                    "role": "user",
+                    "content": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+                  }
+                ],
+                "extra_body": {
+                  "google": {
+                    "image_config": {
+                      "aspect_ratio": "示例值",
+                      "image_size": "https://example.com/image.jpg"
+                    }
+                  }
+                },
+                "contents": [
+                  {
+                    "parts": [
+                      {
+                        "text": "画一只戴着贝雷帽的小猫，白色背景，插画风格"
+                      }
+                    ]
+                  }
+                ]
               }
             }
           }
