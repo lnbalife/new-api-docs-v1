@@ -7,16 +7,69 @@ _openapi:
   structuredData:
     headings: []
     contents:
-      - content: |
-          会話履歴に基づいてモデルの応答を生成します。ストリーミングおよび非ストリーミング応答をサポートしています。
+      - content: >-
+          会話履歴に基づいてモデルの応答を生成します。ストリーミングおよび非ストリーミングの応答をサポートしています。
+
 
           OpenAI Chat Completions APIと互換性があります。
+
+
+
+          ## マルチモーダルの説明
+
+
+          `messages[].content` にはコンテンツの配列を渡すことができます。アイテム構造は
+          `text`、`image_url`、`input_audio`、`file`、`video_url`をサポートしており、実際に使用可能なモードは選択したモデルとチャネルの能力に依存します。
+
+
+          ```bash
+
+          curl "$BASE_URL/v1/chat/completions" \
+            -H "Authorization: Bearer $NODEKEY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "gpt-4o",
+              "messages": [{
+                "role": "user",
+                "content": [
+                  {"type": "text", "text": "この画像の商品の売りポイントを説明してください"},
+                  {"type": "image_url", "image_url": {"url": "https://example.com/product.jpg"}}
+                ]
+              }]
+            }'
+          ```
+
+
+          Geminiのネイティブマルチモーダル呼び出しは `/v1beta/models/{model}:generateContent` を使用します。Geminiの画像生成モデルは、このインターフェースのOpenAIチャットフォーマットを介しても呼び出すことができます。
 ---
 
 {/* このファイルはFumadocsによって生成されました。このファイルを直接編集しないでください。変更は生成コマンドを再実行することで行う必要があります。 */}
 
-会話履歴に基づいてモデルの応答を生成します。ストリーミングおよび非ストリーミング応答をサポートしています。
+会話履歴に基づいてモデルの応答を生成します。ストリーミングおよび非ストリーミングの応答をサポートしています。
 
 OpenAI Chat Completions APIと互換性があります。
+
+
+## マルチモーダルの説明
+
+`messages[].content` にはコンテンツの配列を渡すことができます。アイテム構造は `text`、`image_url`、`input_audio`、`file`、`video_url`をサポートしており、実際に使用可能なモードは選択したモデルとチャネルの能力に依存します。
+
+```bash
+curl "$BASE_URL/v1/chat/completions" \
+  -H "Authorization: Bearer $NODEKEY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [{
+      "role": "user",
+      "content": [
+        {"type": "text", "text": "この画像の商品の売りポイントを説明してください"},
+        {"type": "image_url", "image_url": {"url": "https://example.com/product.jpg"}}
+      ]
+    }]
+  }'
+```
+
+Geminiのネイティブマルチモーダル呼び出しは `/v1beta/models/{model}:generateContent` を使用します。Geminiの画像生成モデルは、このインターフェースのOpenAIチャットフォーマットを介しても呼び出すことができます。
 
 <APIPage document={"openapi/generated/ai-model/聊天（Chat）/原生OpenAI格式/post-v1-chat-completions-createchatcompletion-383826473.json"} operations={[{"path":"/v1/chat/completions","method":"post"}]} />

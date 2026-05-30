@@ -9,7 +9,7 @@ export const linkItems: LinkItemType[] = [
 
 export const logo = (
   <Image
-    alt="NodeKey"
+    alt="算力路由器"
     src="/assets/logo.png"
     width={20}
     height={20}
@@ -27,7 +27,7 @@ export function baseOptions(locale: string): BaseLayoutProps {
         <>
           {logo}
           <span className="font-medium in-[header]:text-[15px] [.uwu_&]:hidden">
-            NodeKey
+            算力路由器
           </span>
         </>
       ),

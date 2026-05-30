@@ -1,5 +1,5 @@
 ---
-title: Kling ビデオ生成
+title: Kling 文生動画
 full: true
 _openapi:
   method: POST
@@ -7,17 +7,42 @@ _openapi:
   structuredData:
     headings: []
     contents:
-      - content: |
-          テキスト記述からビデオを生成するためのKlingモデルを使用します。
+      - content: |-
+          Kling 可灵フォーマットを使用して、テキスト記述から動画を生成します。
 
-          サポートされているモデル：kling-v1, kling-v1-5 など
+          ```bash
+          curl "$BASE_URL/kling/v1/videos/text2video" \
+            -H "Authorization: Bearer $NODEKEY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model_name": "kling-v1",
+              "prompt": "清晨山路上的骑行者缓慢经过镜头",
+              "aspect_ratio": "16:9",
+              "duration": "5",
+              "mode": "std"
+            }'
+          ```
+
+          タスクの照会には `GET /kling/v1/videos/text2video/{task_id}` を使用します。
 ---
 
-{/* このファイルはFumadocsによって生成されました。このファイルを直接編集しないでください。変更は生成コマンドを再実行することで行う必要があります。 */}
+{/* このファイルは Fumadocs によって生成されました。このファイルを直接編集しないでください。変更は生成コマンドを再実行することで行う必要があります。 */}
 
-テキスト記述からビデオを生成するためのKlingモデルを使用します。
+Kling 可灵フォーマットを使用して、テキスト記述から動画を生成します。
 
-サポートされているモデル：kling-v1, kling-v1-5 など
+```bash
+curl "$BASE_URL/kling/v1/videos/text2video" \
+  -H "Authorization: Bearer $NODEKEY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_name": "kling-v1",
+    "prompt": "清晨山路上的骑行者缓慢经过镜头",
+    "aspect_ratio": "16:9",
+    "duration": "5",
+    "mode": "std"
+  }'
+```
 
+タスクの照会には `GET /kling/v1/videos/text2video/{task_id}` を使用します。
 
 <APIPage document={"openapi/generated/ai-model/视频（Videos）/可灵格式/post-kling-v1-videos-text2video-createklingtext2video-383844639.json"} operations={[{"path":"/kling/v1/videos/text2video","method":"post"}]} />

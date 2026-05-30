@@ -13,7 +13,7 @@ export function createMetadata(override: Metadata): Metadata {
       description: override.description ?? undefined,
       url: 'https://nodekey.xinghanyun.cn',
       images: '/assets/logo.png',
-      siteName: 'Nodekey',
+      siteName: '算力路由器',
       type: 'website',
       ...override.openGraph,
     },

@@ -14,6 +14,18 @@ bun dev
 
 Open http://localhost:3000 with your browser to see the result.
 
+## Updating Chinese Docs
+
+After editing files under `content/docs/zh`, run:
+
+```bash
+bun run translate
+bun run build
+```
+
+- `bun run translate`: runs `scripts/translate-docs.ts` to sync English and Japanese docs.
+- `bun run build`: runs `scripts/prebuild.ts` before `next build` to verify the site can build.
+
 ## Build
 
 Build the application for production:

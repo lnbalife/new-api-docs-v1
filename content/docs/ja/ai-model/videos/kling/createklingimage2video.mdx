@@ -1,5 +1,5 @@
 ---
-title: Klingによる画像から動画生成
+title: Kling 画像から動画を生成
 full: true
 _openapi:
   method: POST
@@ -7,17 +7,42 @@ _openapi:
   structuredData:
     headings: []
     contents:
-      - content: |
-          Klingモデルを使用して画像から動画を生成します。
+      - content: |-
+          Kling 可灵フォーマットを使用して画像から動画を生成します。
 
-          imageパラメータを通じて画像のURLまたはBase64エンコードされた画像データを渡すことができます。
+          ```bash
+          curl "$BASE_URL/kling/v1/videos/image2video" \
+            -H "Authorization: Bearer $NODEKEY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model_name": "kling-v2-master",
+              "image": "https://example.com/first-frame.jpg",
+              "prompt": "カメラがゆっくりと近づき、人物が窓の外を見上げる",
+              "duration": "5",
+              "mode": "std"
+            }'
+          ```
+
+          タスクの照会には `GET /kling/v1/videos/image2video/{task_id}` を使用します。
 ---
 
-{/* このファイルはFumadocsによって生成されました。このファイルを直接編集しないでください。変更は生成コマンドを再実行することで行う必要があります。 */}
+{/* このファイルは Fumadocs によって生成されました。このファイルを直接編集しないでください。変更は生成コマンドを再実行することで行う必要があります。 */}
 
-Klingモデルを使用して画像から動画を生成します。
+Kling 可灵フォーマットを使用して画像から動画を生成します。
 
-imageパラメータを通じて画像のURLまたはBase64エンコードされた画像データを渡すことができます。
+```bash
+curl "$BASE_URL/kling/v1/videos/image2video" \
+  -H "Authorization: Bearer $NODEKEY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_name": "kling-v2-master",
+    "image": "https://example.com/first-frame.jpg",
+    "prompt": "カメラがゆっくりと近づき、人物が窓の外を見上げる",
+    "duration": "5",
+    "mode": "std"
+  }'
+```
 
+タスクの照会には `GET /kling/v1/videos/image2video/{task_id}` を使用します。
 
 <APIPage document={"openapi/generated/ai-model/视频（Videos）/可灵格式/post-kling-v1-videos-image2video-createklingimage2video-383844641.json"} operations={[{"path":"/kling/v1/videos/image2video","method":"post"}]} />

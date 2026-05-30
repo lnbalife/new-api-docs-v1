@@ -247,7 +247,7 @@ function Input(props: ComponentProps<'textarea'>) {
 
 const roleName: Record<string, string> = {
   user: 'you',
-  assistant: 'NodeKey Docs',
+  assistant: '算力路由器平台 Docs',
 };
 
 function Message({

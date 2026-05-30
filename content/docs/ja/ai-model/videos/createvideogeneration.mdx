@@ -7,16 +7,114 @@ _openapi:
   structuredData:
     headings: []
     contents:
-      - content: |
+      - content: >-
           ビデオ生成タスクを提出します。テキストからビデオと画像からビデオをサポートしています。
 
+
           タスク ID を返します。GET インターフェースを通じてタスクの状態を確認できます。
+
+
+
+          ## 一般的なビデオタスク
+
+
+          このエンドポイントは、ほとんどのテキストからビデオ、画像からビデオのチャネルを受け入れます。作成後は `GET /v1/video/generations/{task_id}`
+          で確認してください；一般的なフィールドは優先的に
+          `model`、`prompt`、`image`/`images`、`input_reference`、`seconds`、`size` を使用し、チャネルの差異パラメータは
+          `metadata` に入れます。
+
+
+          | チャネル | モデル |
+
+          | --- | --- |
+
+          | Sora OpenAI | `sora-2`、`sora-2-pro` |
+
+          | Seedance |
+          `doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-lite-t2v`、`doubao-seedance-1-0-lite-i2v`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128`
+          |
+
+          | Wan / Happyhorse |
+          `wan2.7-i2v-2026-04-25`、`wan2.7-i2v`、`wan2.5-i2v-preview`、`wan2.2-i2v-flash`、`wan2.2-i2v-plus`、`wanx2.1-i2v-plus`、`wanx2.1-i2v-turbo`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v`
+          |
+
+          | Veo |
+          `veo-3.0-generate-001`、`veo-3.0-fast-generate-001`、`veo-3.1-generate-preview`、`veo-3.1-fast-generate-preview`
+          |
+
+          | Hailuo |
+          `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-2.3-Fast`、`MiniMax-Hailuo-02`、`T2V-01`、`T2V-01-Director`、`I2V-01`、`I2V-01-live`、`I2V-01-Director`、`S2V-01`
+          |
+
+          | Vidu | `viduq2`、`viduq1`、`vidu2.0`、`vidu1.5` |
+
+          | 非標可灵 | `kling-v1`、`kling-v1-6`、`kling-v2-master` |
+
+          | 非標即梦 | `jimeng_vgfm_t2v_l20` |
+
+
+          ```bash
+
+          curl "$BASE_URL/v1/video/generations" \
+            -H "Authorization: Bearer $NODEKEY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "doubao-seedance-2-0-260128",
+              "prompt": "手持鏡で朝のカフェを通り抜け、窓から日差しがテーブルを照らす",
+              "seconds": "5",
+              "size": "1280x720",
+              "metadata": {"ratio": "16:9", "resolution": "720p", "generate_audio": false}
+            }'
+
+          curl "$BASE_URL/v1/video/generations/task_xxx" \
+            -H "Authorization: Bearer $NODEKEY_API_KEY"
+          ```
+
+
+          非標インターフェースはチャネル形式を保持します：可灵は
+          `/kling/v1/videos/text2video`、`/kling/v1/videos/image2video` を使用し；即梦は
+          `/jimeng/?Action=...` を使用します。Seedance の `metadata.content` には
+          `image_url`、`video_url`、`audio_url` を参考として渡すことができます。
 ---
 
-{/* このファイルは Fumadocs によって生成されました。このファイルを直接編集しないでください。変更は生成コマンドを再実行することによって行う必要があります。 */}
+{/* このファイルは Fumadocs によって生成されました。このファイルを直接編集しないでください。変更は生成コマンドを再実行することで行うべきです。 */}
 
 ビデオ生成タスクを提出します。テキストからビデオと画像からビデオをサポートしています。
 
 タスク ID を返します。GET インターフェースを通じてタスクの状態を確認できます。
+
+
+## 一般的なビデオタスク
+
+このエンドポイントは、ほとんどのテキストからビデオ、画像からビデオのチャネルを受け入れます。作成後は `GET /v1/video/generations/{task_id}` で確認してください；一般的なフィールドは優先的に `model`、`prompt`、`image`/`images`、`input_reference`、`seconds`、`size` を使用し、チャネルの差異パラメータは `metadata` に入れます。
+
+| チャネル | モデル |
+| --- | --- |
+| Sora OpenAI | `sora-2`、`sora-2-pro` |
+| Seedance | `doubao-seedance-1-0-pro-250528`、`doubao-seedance-1-0-lite-t2v`、`doubao-seedance-1-0-lite-i2v`、`doubao-seedance-1-5-pro-251215`、`doubao-seedance-2-0-260128`、`doubao-seedance-2-0-fast-260128` |
+| Wan / Happyhorse | `wan2.7-i2v-2026-04-25`、`wan2.7-i2v`、`wan2.5-i2v-preview`、`wan2.2-i2v-flash`、`wan2.2-i2v-plus`、`wanx2.1-i2v-plus`、`wanx2.1-i2v-turbo`、`happyhorse-1.0-t2v`、`happyhorse-1.0-r2v` |
+| Veo | `veo-3.0-generate-001`、`veo-3.0-fast-generate-001`、`veo-3.1-generate-preview`、`veo-3.1-fast-generate-preview` |
+| Hailuo | `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-2.3-Fast`、`MiniMax-Hailuo-02`、`T2V-01`、`T2V-01-Director`、`I2V-01`、`I2V-01-live`、`I2V-01-Director`、`S2V-01` |
+| Vidu | `viduq2`、`viduq1`、`vidu2.0`、`vidu1.5` |
+| 非標可灵 | `kling-v1`、`kling-v1-6`、`kling-v2-master` |
+| 非標即梦 | `jimeng_vgfm_t2v_l20` |
+
+```bash
+curl "$BASE_URL/v1/video/generations" \
+  -H "Authorization: Bearer $NODEKEY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "doubao-seedance-2-0-260128",
+    "prompt": "手持鏡で朝のカフェを通り抜け、窓から日差しがテーブルを照らす",
+    "seconds": "5",
+    "size": "1280x720",
+    "metadata": {"ratio": "16:9", "resolution": "720p", "generate_audio": false}
+  }'
+
+curl "$BASE_URL/v1/video/generations/task_xxx" \
+  -H "Authorization: Bearer $NODEKEY_API_KEY"
+```
+
+非標インターフェースはチャネル形式を保持します：可灵は `/kling/v1/videos/text2video`、`/kling/v1/videos/image2video` を使用し；即梦は `/jimeng/?Action=...` を使用します。Seedance の `metadata.content` には `image_url`、`video_url`、`audio_url` を参考として渡すことができます。
 
 <APIPage document={"openapi/generated/ai-model/视频（Videos）/post-v1-video-generations-createvideogeneration-383844576.json"} operations={[{"path":"/v1/video/generations","method":"post"}]} />

@@ -7,10 +7,38 @@ _openapi:
   structuredData:
     headings: []
     contents:
-      - content: |
+      - content: >-
           OpenAI 互換のビデオ生成インターフェース。
 
+
           参考文書: https://platform.openai.com/docs/api-reference/videos/create
+
+
+
+          ## OpenAI ビデオ呼び出し
+
+
+          この一般的なエンドポイントは現在 `sora-2`、`sora-2-pro` に使用されています。作成後は `GET /v1/videos/{task_id}` を使用してクエリし、ビデオファイルのプロキシアドレスは `GET /v1/videos/{task_id}/content` です。
+
+
+          ```bash
+
+          curl "$BASE_URL/v1/videos" \
+            -H "Authorization: Bearer $NODEKEY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "sora-2",
+              "prompt": "手持ちカメラが朝のカフェを通り抜け、日差しが窓からテーブルを照らす",
+              "seconds": "5",
+              "size": "1280x720"
+            }'
+
+          curl "$BASE_URL/v1/videos/task_xxx" \
+            -H "Authorization: Bearer $NODEKEY_API_KEY"
+          ```
+
+
+          フォームアップロードの参考入力もサポートされています；参考画像には `input_reference` を使用します。`sora-2` は `720x1280`、`1280x720` をサポートし、`sora-2-pro` は追加で `1792x1024`、`1024x1792` をサポートします。
 ---
 
 {/* このファイルは Fumadocs によって生成されました。このファイルを直接編集しないでください。変更は生成コマンドを再実行することで行う必要があります。 */}
@@ -19,5 +47,26 @@ OpenAI 互換のビデオ生成インターフェース。
 
 参考文書: https://platform.openai.com/docs/api-reference/videos/create
 
+
+## OpenAI ビデオ呼び出し
+
+この一般的なエンドポイントは現在 `sora-2`、`sora-2-pro` に使用されています。作成後は `GET /v1/videos/{task_id}` を使用してクエリし、ビデオファイルのプロキシアドレスは `GET /v1/videos/{task_id}/content` です。
+
+```bash
+curl "$BASE_URL/v1/videos" \
+  -H "Authorization: Bearer $NODEKEY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "sora-2",
+    "prompt": "手持ちカメラが朝のカフェを通り抜け、日差しが窓からテーブルを照らす",
+    "seconds": "5",
+    "size": "1280x720"
+  }'
+
+curl "$BASE_URL/v1/videos/task_xxx" \
+  -H "Authorization: Bearer $NODEKEY_API_KEY"
+```
+
+フォームアップロードの参考入力もサポートされています；参考画像には `input_reference` を使用します。`sora-2` は `720x1280`、`1280x720` をサポートし、`sora-2-pro` は追加で `1792x1024`、`1024x1792` をサポートします。
 
 <APIPage document={"openapi/generated/ai-model/视频（Videos）/Sora格式/post-v1-videos-createvideo-383844578.json"} operations={[{"path":"/v1/videos","method":"post"}]} />
