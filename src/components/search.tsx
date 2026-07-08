@@ -44,7 +44,7 @@ function Header() {
             target="_blank"
             rel="noreferrer noopener"
           >
-            New API
+            NodeKey
           </a>
         </p>
       </div>
